@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Windows.Input;
 using Avalonia.Controls;
+using JagexAccountSwitcher.Converters;
 using JagexAccountSwitcher.Helpers;
 using JagexAccountSwitcher.Model;
 using MsBox.Avalonia;
@@ -146,7 +147,7 @@ namespace JagexAccountSwitcher.ViewModels
             if (File.Exists(accountsFile))
             {
                 var json = File.ReadAllText(accountsFile);
-                var accounts = JsonSerializer.Deserialize<List<RunescapeAccount>>(json);
+                var accounts = JsonSerializer.Deserialize<List<RunescapeAccount>>(json, AppJsonContext.Default.ListRunescapeAccount);
                 if (accounts != null)
                 {
                     Accounts = new ObservableCollection<RunescapeAccount>(accounts);
@@ -163,7 +164,7 @@ namespace JagexAccountSwitcher.ViewModels
             }
 
             var accountsFile = Path.Combine(configDir, "accounts.json");
-            var json = JsonSerializer.Serialize(Accounts.ToList(), new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(Accounts.ToList(), AppJsonContext.Default.ListRunescapeAccount);
             File.WriteAllText(accountsFile, json);
         }
 

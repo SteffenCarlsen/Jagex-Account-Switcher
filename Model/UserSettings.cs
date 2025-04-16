@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
+using JagexAccountSwitcher.Converters;
 using JagexAccountSwitcher.Helpers;
 
 namespace JagexAccountSwitcher.Model;
@@ -12,7 +13,7 @@ public class UserSettings : INotifyPropertyChanged
     
     public void SaveToFile()
     {
-        var json = JsonSerializer.Serialize(this, new JsonSerializerOptions { WriteIndented = true });
+        var json = JsonSerializer.Serialize(this, AppJsonContext.Default.UserSettings);
         File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "Settings.json"), json);
     }
     
@@ -22,7 +23,7 @@ public class UserSettings : INotifyPropertyChanged
         if (File.Exists(file))
         {
             var json = File.ReadAllText(file);
-            var config = JsonSerializer.Deserialize<UserSettings>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var config = JsonSerializer.Deserialize<UserSettings>(json, AppJsonContext.Default.UserSettings);
             if (config != null)
             {
                 RunelitePath = config.RunelitePath;
