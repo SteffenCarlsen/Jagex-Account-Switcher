@@ -15,7 +15,9 @@ public partial class MainWindow : Window
         ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.PreferSystemChrome;
         Background = Avalonia.Media.Brushes.Black;
         // Attach DevTools to this window
+#if DEBUG
         this.AttachDevTools();
+#endif
     }
 
     private void TitleBar_PointerPressed(object? sender, PointerPressedEventArgs e)
