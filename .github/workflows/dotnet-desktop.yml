@@ -2,51 +2,88 @@ name: Build and Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
+
+permissions:
+  contents: write
 
 jobs:
   build:
+    strategy:
+      matrix:
+        configuration: [Release]
+
     runs-on: windows-latest
-    
+
+    env:
+      Solution_Name: JagexAccountSwitcher.csproj
+
     steps:
-    - uses: actions/checkout@v3
-      
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 10.0.100-preview.2.25164.34
-        
-    - name: Restore dependencies
-      run: dotnet restore
-      
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-      
-    - name: Publish
-      run: dotnet publish -c Release -o publish
-      
-    - name: Get version
-      id: get_version
-      run: echo "VERSION=$(date +'%Y.%m.%d').${{ github.run_number }}" >> $GITHUB_OUTPUT
-      shell: bash
-      
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Ensure this token has write permissions
-      with:
-        tag_name: v${{ steps.get_version.outputs.VERSION }}
-        release_name: Release v${{ steps.get_version.outputs.VERSION }}
-        draft: false
-        prerelease: false
-    
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Ensure this token is properly configured
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./Jagex-Account-Switcher.zip
-        asset_name: Jagex-Account-Switcher.zip
-        asset_content_type: application/zip
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup MSBuild.exe
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore the application
+        run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+        env:
+          Configuration: ${{ matrix.configuration }}
+
+      - name: Build the application
+        run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
+        env:
+          Configuration: ${{ matrix.configuration }}
+
+      - name: Publish the application
+        run: |
+          mkdir -p out
+          dotnet publish JagexAccountSwitcher.csproj -c Release -o out/JagexAccountSwitcher
+        shell: bash
+
+      - name: Extract version from csproj
+        id: extract_version
+        run: |
+          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' JagexAccountSwitcher.csproj)
+          echo "VERSION=$version" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Create zip file
+        run: |
+          Compress-Archive -Path out/JagexAccountSwitcher/* -DestinationPath out/JagexAccountSwitcher_v${{ env.VERSION }}.zip
+        shell: pwsh
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: PublishedApp
+          path: out
+
+      - name: Create a Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: JagexAccountSwitcher Release v${{ env.VERSION }} - ${{ github.event.head_commit.timestamp }}
+          body: "Release of version ${{ env.VERSION }} on ${{ github.event.head_commit.timestamp }}"
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./out/JagexAccountSwitcher_v${{ env.VERSION }}.zip
+          asset_name: JagexAccountSwitcher_v${{ env.VERSION }}.zip
+          asset_content_type: application/zip
