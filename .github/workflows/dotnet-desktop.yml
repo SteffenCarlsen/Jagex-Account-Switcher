@@ -34,20 +34,17 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Ensure this token has write permissions
       with:
         tag_name: v${{ steps.get_version.outputs.VERSION }}
         release_name: Release v${{ steps.get_version.outputs.VERSION }}
         draft: false
         prerelease: false
-        
-    - name: Zip Artifacts
-      run: Compress-Archive -Path publish/* -DestinationPath Jagex-Account-Switcher.zip
-      
+    
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Ensure this token is properly configured
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./Jagex-Account-Switcher.zip
