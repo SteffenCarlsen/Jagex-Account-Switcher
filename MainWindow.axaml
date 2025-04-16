@@ -1,0 +1,67 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="JagexAccountSwitcher.MainWindow"
+        xmlns:viewModels="clr-namespace:JagexAccountSwitcher.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="630" d:DesignHeight="375"
+        x:DataType="viewModels:MainWindowViewModel"
+        Icon="/Assets/icons8-intelligence-64.ico"
+        Title="Jagex Account Switcher"
+        MinWidth="435"
+        MinHeight="250"
+        Width="750"
+        Height="400"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="30">
+
+    <Design.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Custom Title Bar (Draggable) -->
+        <Grid Grid.Row="0" Background="Black" PointerPressed="TitleBar_PointerPressed">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0">
+                <Image Source="/Assets/icons8-intelligence-64.ico" Width="16" Height="16" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                <TextBlock Text="Jagex Account Switcher" VerticalAlignment="Center" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="160" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Navigation Pane -->
+            <Border Grid.Column="0" BorderBrush="DarkGray" BorderThickness="1">
+                <StackPanel Background="Black" HorizontalAlignment="Stretch">
+                    <TextBlock Text="Navigation" FontWeight="Bold" Margin="10" TextAlignment="Center"
+                               TextDecorations="Underline" />
+                    <Button Content="Account Overview" Margin="8" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
+                            CommandParameter="AccountOverview" />
+                    <Button Content="Settings" Margin="8" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
+                            CommandParameter="Settings" />
+                    <Button Content="Guide" Margin="8" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
+                            CommandParameter="Guide" />
+                </StackPanel>
+            </Border>
+
+            <!-- Main Content Area -->
+            <Border Grid.Column="1" BorderBrush="DarkGray" BorderThickness="1">
+                <ContentControl Content="{Binding CurrentView}" />
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

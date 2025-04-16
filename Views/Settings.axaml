@@ -1,0 +1,50 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:JagexAccountSwitcher.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="JagexAccountSwitcher.Views.Settings"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="20">
+            <!-- Title -->
+            <TextBlock Text="Settings" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       Margin="0,0,0,15"
+                       HorizontalAlignment="Center"/>
+
+            <!-- RuneLite Path Section -->
+            <TextBlock Text="RuneLite Location" 
+                       FontWeight="SemiBold" 
+                       Margin="0,0,0,5"/>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                <TextBox Grid.Column="0" 
+                         Text="{Binding RunelitePath}" 
+                         Watermark="Path to RuneLite executable"
+                         IsReadOnly="True"/>
+                <Button Grid.Column="1" 
+                        Content="Browse" 
+                        Click="BrowseRunelitePath_Click"
+                        Margin="5,0,0,0"/>
+            </Grid>
+
+            <!-- Configurations Path Section -->
+            <TextBlock Text="Configurations Location" 
+                       FontWeight="SemiBold" 
+                       Margin="0,0,0,5"/>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                <TextBox Grid.Column="0" 
+                         Text="{Binding ConfigurationsPath}" 
+                         Watermark="Path to store configurations"
+                         IsReadOnly="True"/>
+                <Button Grid.Column="1" 
+                        Content="Browse" 
+                        Click="BrowseConfigurationsPath_Click"
+                        Margin="5,0,0,0"/>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
