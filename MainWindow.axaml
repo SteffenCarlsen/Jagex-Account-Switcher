@@ -49,6 +49,9 @@
                     <Button Content="Account Overview" Margin="8" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
                             CommandParameter="AccountOverview" />
+                    <Button Content="Account Handler" Margin="8" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
+                            CommandParameter="MassAccountHandler" />
                     <Button Content="Settings" Margin="8" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
                             CommandParameter="Settings" />

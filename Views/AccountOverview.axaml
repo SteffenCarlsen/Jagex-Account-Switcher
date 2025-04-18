@@ -15,8 +15,6 @@
         <converters:BoolToColorConverter x:Key="BoolToColorConverter" TrueValue="Green" FalseValue="Red"/>
     </UserControl.Resources>
     <Grid RowDefinitions="Auto,Auto,*,Auto">
-        <TextBlock Grid.Row="0" Text="Runescape Accounts" FontSize="20" Margin="10"/>
-    
         <!-- Header row -->
         <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="10,5,10,0">
             <TextBlock Grid.Column="0" Text="Account Name" FontWeight="Bold" Margin="5"/>

@@ -45,6 +45,21 @@
                         Click="BrowseConfigurationsPath_Click"
                         Margin="5,0,0,0"/>
             </Grid>
+            
+            <!-- Microbot Jar Path Section -->
+            <TextBlock Text="Microbot Jar Location" 
+                       FontWeight="SemiBold" 
+                       Margin="0,0,0,5"/>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                <TextBox Grid.Column="0" 
+                         Text="{Binding MicroBotJarPath}" 
+                         Watermark="Path to the Microbot Jar file"
+                         IsReadOnly="True"/>
+                <Button Grid.Column="1" 
+                        Content="Browse" 
+                        Click="BrowseMicrobotJarPath_Click"
+                        Margin="5,0,0,0"/>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

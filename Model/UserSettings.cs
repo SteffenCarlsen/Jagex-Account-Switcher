@@ -10,7 +10,8 @@ public class UserSettings : INotifyPropertyChanged
 {
     public string RunelitePath { get; set; } = RuneliteHelper.GetRunelitePath();
     public string ConfigurationsPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Configurations");
-    
+    public string MicroBotJarPath { get; set; } = string.Empty;
+
     public void SaveToFile()
     {
         var json = JsonSerializer.Serialize(this, AppJsonContext.Default.UserSettings);
@@ -28,6 +29,7 @@ public class UserSettings : INotifyPropertyChanged
             {
                 RunelitePath = config.RunelitePath;
                 ConfigurationsPath = config.ConfigurationsPath;
+                MicroBotJarPath = config.MicroBotJarPath;
             }
         }
     }

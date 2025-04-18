@@ -669,3 +669,11 @@ fabric.properties
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp,rider,visualstudio,dotnetcore
+.idea/.idea.JagexAccountSwitcher.dir/.idea/vcs.xml
+.idea/.idea.JagexAccountSwitcher.dir/.idea/indexLayout.xml
+.idea/.idea.JagexAccountSwitcher.dir/.idea/encodings.xml
+.idea/.idea.JagexAccountSwitcher.dir/.idea/avalonia.xml
+.idea/.idea.Jagex-Account-Switcher.dir/.idea/vcs.xml
+.idea/.idea.Jagex-Account-Switcher.dir/.idea/indexLayout.xml
+.idea/.idea.Jagex-Account-Switcher.dir/.idea/encodings.xml
+.idea/.idea.Jagex-Account-Switcher.dir/.idea/avalonia.xml

@@ -24,6 +24,19 @@ namespace JagexAccountSwitcher.ViewModels
             }
         }
 
+        public string MicroBotJarPath
+        {
+            get => _userSettings.MicroBotJarPath;
+            set
+            {
+                if (_userSettings.MicroBotJarPath != value)
+                {
+                    _userSettings.MicroBotJarPath = value;
+                    this.RaisePropertyChanged(nameof(MicroBotJarPath));
+                }
+            }
+        }
+        
         public string ConfigurationsPath
         {
             get => _userSettings.ConfigurationsPath;
@@ -56,6 +69,10 @@ namespace JagexAccountSwitcher.ViewModels
             else if (e.PropertyName == nameof(UserSettings.ConfigurationsPath))
             {
                 this.RaisePropertyChanged(nameof(ConfigurationsPath));
+            } 
+            else if (e.PropertyName == nameof(UserSettings.MicroBotJarPath))
+            {
+                this.RaisePropertyChanged(nameof(MicroBotJarPath));
             }
         }
 
@@ -86,6 +103,30 @@ namespace JagexAccountSwitcher.ViewModels
         public void Dispose()
         {
             _userSettings.PropertyChanged -= UserSettings_PropertyChanged;
+        }
+
+        public async Task BrowseMicrobotJarPath()
+        {
+            var jarFileType = new FilePickerFileType("Java Archive")
+            {
+                Patterns = new[] { "*.jar" },
+                MimeTypes = new[] { "application/java-archive" }
+            };
+    
+            var options = new FilePickerOpenOptions
+            {
+                Title = "Select Microbot Jar",
+                FileTypeFilter = new[] { jarFileType },
+                AllowMultiple = false
+            };
+    
+            var files = await _storageProvider.OpenFilePickerAsync(options);
+
+            if (files.Count > 0)
+            {
+                MicroBotJarPath = files[0].Path.LocalPath;
+                _userSettings.SaveToFile();
+            }
         }
     }
 }

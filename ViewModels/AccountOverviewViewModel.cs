@@ -112,17 +112,10 @@ namespace JagexAccountSwitcher.ViewModels
         
         private void SetActiveAccount()
         {
-            var credentialsFile = new FileInfo(Path.Combine(_userSettings.ConfigurationsPath, $"credentials.properties.{SelectedAccount.AccountName}"));
-            if (credentialsFile.Exists)
+            if (RuneliteHelper.SetActiveAccount(SelectedAccount, Accounts, _userSettings.ConfigurationsPath, _userSettings.RunelitePath))
             {
-                credentialsFile.CopyTo(Path.Combine(_userSettings.RunelitePath, "credentials.properties"), true);
+                SaveAccounts();
             }
-            foreach (var account in Accounts)
-            {
-                account.IsActiveAccount = false;
-            }
-            SelectedAccount.IsActiveAccount = true;
-            SaveAccounts();
         }
 
         private bool HasAccountSelected()
@@ -154,18 +147,10 @@ namespace JagexAccountSwitcher.ViewModels
                 }
             }
         }
-
+        
         private void SaveAccounts()
         {
-            var configDir = _userSettings.ConfigurationsPath;
-            if (!Directory.Exists(configDir))
-            {
-                Directory.CreateDirectory(configDir);
-            }
-
-            var accountsFile = Path.Combine(configDir, "accounts.json");
-            var json = JsonSerializer.Serialize(Accounts.ToList(), AppJsonContext.Default.ListRunescapeAccount);
-            File.WriteAllText(accountsFile, json);
+            RuneliteHelper.SaveAccounts(Accounts, _userSettings.ConfigurationsPath);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

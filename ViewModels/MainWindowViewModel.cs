@@ -17,6 +17,7 @@ namespace JagexAccountSwitcher.ViewModels
         public AccountOverviewViewModel AccountOverviewViewModel { get; set; }
         public LandingPageViewModel LandingPageViewModel { get; set; }
         public SettingsViewModel SettingsViewModel { get; set; }
+        public MassAccountHandlerViewModel MassAccountHandlerViewModel { get; set; }
         public object CurrentView
         {
             get => _currentView;
@@ -37,6 +38,7 @@ namespace JagexAccountSwitcher.ViewModels
             AccountOverviewViewModel = new AccountOverviewViewModel(_settings);
             LandingPageViewModel = new LandingPageViewModel();
             SettingsViewModel = new SettingsViewModel(window.StorageProvider, _settings);
+            MassAccountHandlerViewModel = new MassAccountHandlerViewModel(AccountOverviewViewModel, _settings);
             ChangeViewCommand = new RelayCommand<string>(ChangeView);
             _viewInstances = new Dictionary<string, object>();
             ChangeView("LandingPage");
@@ -52,6 +54,7 @@ namespace JagexAccountSwitcher.ViewModels
                     "LandingPage" => new LandingPage(),
                     "AccountOverview" => new AccountOverview(AccountOverviewViewModel),
                     "Settings" => new Settings(SettingsViewModel),
+                    "MassAccountHandler" => new MassAccountHandler(MassAccountHandlerViewModel),
                     _ => new LandingPage()
                 };
                 _viewInstances[viewName] = view;

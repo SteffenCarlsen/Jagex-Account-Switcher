@@ -1,0 +1,75 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:JagexAccountSwitcher.ViewModels"
+             xmlns:model="using:JagexAccountSwitcher.Model"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="JagexAccountSwitcher.Views.MassAccountHandler"
+             x:DataType="vm:MassAccountHandlerViewModel"
+             x:Name="MassAccountHandlerView"
+             x:CompileBindings="False">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" Margin="10">
+        <!-- Header for ListBox columns -->
+        <Grid Grid.Row="1" ColumnDefinitions="150,120,*,Auto,Auto" Margin="10,0,10,5">
+            <TextBlock Grid.Column="0" Text="Account" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Text="Process ID" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="2" Text="Process lifetime" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="3" Text="Actions" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+        </Grid>
+
+        <ListBox Grid.Row="2" ItemsSource="{Binding AccountProcesses}" Margin="0,0,0,10">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="model:MassAccountLinkerModel">
+                    <Grid ColumnDefinitions="150,120,*,Auto,Auto">
+                        <TextBlock Grid.Column="0" Text="{Binding Account.AccountName}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Column="1" Text="{Binding Process.Id, StringFormat='PID: {0}'}"
+                                   IsVisible="{Binding Process, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"/>
+                        <TextBlock Grid.Column="2" Text="{Binding ProcessLifetime}"
+                                   IsVisible="{Binding Process, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"/>
+                        <Button Grid.Column="3"
+                                Content="Start"
+                                Command="{Binding DataContext.StartClientCommand, ElementName=MassAccountHandlerView}"
+                                CommandParameter="{Binding}"
+                                IsVisible="{Binding Process, Converter={x:Static ObjectConverters.IsNull}}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                        <Button Grid.Column="4"
+                                Content="Kill"
+                                Command="{Binding DataContext.KillClientCommand, ElementName=MassAccountHandlerView}"
+                                CommandParameter="{Binding}"
+                                IsVisible="{Binding Process, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Update Delay (ms):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <NumericUpDown Minimum="500" Maximum="5000" Value="{Binding UpdateDelay}"
+                           Increment="100" Width="150"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button Content="Start All" Command="{Binding StartAllCommand}" Padding="20,10"/>
+            <TextBlock Text="[?]"
+                       Margin="1,0,0,0"
+                       VerticalAlignment="Top"
+                       FontWeight="Bold"
+                       Background="Transparent"
+                       Cursor="Help"
+                       FontSize="15"
+                       ToolTip.Tip="Be aware that mass starting accounts means that all MicroBot instances are children of this program. Closing down this program will closed all instances."/>
+        </StackPanel>
+    </Grid>
+</UserControl>

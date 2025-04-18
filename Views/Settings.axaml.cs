@@ -55,4 +55,9 @@ public partial class Settings : UserControl
     {
         await _viewModel.BrowseConfigurationsPath();
     }
+
+    private async void BrowseMicrobotJarPath_Click(object? sender, RoutedEventArgs e)
+    {
+        await _viewModel.BrowseMicrobotJarPath();
+    }
 }
