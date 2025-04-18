@@ -15,6 +15,7 @@ You can choose to start a specific client or all clients at once. You can also c
 
 ## Settings
 ![JagexAccountSwitcher_xgbD1sny8t](https://github.com/user-attachments/assets/c42f42a0-d8c5-4db1-ad75-dff5dc71f7aa)
+
 By default, the program will automatically try to find the `.runelite` folder for you and the Configuration Location will be set to within the folder of the program.
 If you want to use the *Account Handler*, you will need to direct a Microbot jar file for the program to use.
 
