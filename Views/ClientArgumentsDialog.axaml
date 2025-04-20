@@ -1,0 +1,106 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="JagexAccountSwitcher.Views.ClientArgumentsDialog"
+        Width="400" Height="1000"
+        WindowStartupLocation="CenterOwner"
+        Title="Set Client Arguments Builder"
+        x:CompileBindings="False">
+    <Window.Styles>
+        <Style Selector="CheckBox">
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+        <Style Selector="TextBlock.Header">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+        </Style>
+        <Style Selector="StackPanel.Option">
+            <Setter Property="Margin" Value="0,3,0,3"/>
+        </Style>
+    </Window.Styles>
+    
+    <Grid RowDefinitions="*,Auto">
+        <ScrollViewer Grid.Row="0" Margin="10">
+            <StackPanel>
+                <TextBlock Classes="Header">Client Options</TextBlock>
+                
+                <CheckBox x:Name="CleanJagexLauncherCheckBox">Clean Jagex Launcher</CheckBox>
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12">Remove the credentials.properties file in .runelite folder</TextBlock>
+                
+                <CheckBox x:Name="DeveloperModeCheckBox">Developer Mode</CheckBox>
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12">Enable developer tools</TextBlock>
+                
+                <CheckBox x:Name="DebugCheckBox">Debug Mode</CheckBox>
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12">Show extra debugging output</TextBlock>
+                
+                <CheckBox x:Name="MicrobotDebugCheckBox">Microbot Debug</CheckBox>
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12">Enables debug features for microbot</TextBlock>
+                
+                <CheckBox x:Name="SafeModeCheckBox">Safe Mode</CheckBox>
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12">Disables external plugins and the GPU plugin</TextBlock>
+                
+                <CheckBox x:Name="InsecureSkipTlsCheckBox">Insecure Skip TLS Verification</CheckBox>
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12">Disables TLS verification</TextBlock>
+                
+                <CheckBox x:Name="DisableTelemetryCheckBox">Disable Telemetry</CheckBox>
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12">Disable telemetry</TextBlock>
+                
+                <CheckBox x:Name="DisableWalkerUpdateCheckBox">Disable Walker Update</CheckBox>
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12">Disable updates for the static walker</TextBlock>
+                
+                <CheckBox x:Name="NoUpdateCheckBox">No Update</CheckBox>
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12">Skips the launcher update</TextBlock>
+                
+                <TextBlock Classes="Header">Options with Values</TextBlock>
+                
+                <StackPanel Classes="Option">
+                    <TextBlock>JAV Config URL:</TextBlock>
+                    <TextBox x:Name="JavConfigTextBox" Watermark="Enter URL (optional)"/>
+                </StackPanel>
+                
+                <StackPanel Classes="Option">
+                    <TextBlock>Profile:</TextBlock>
+                    <TextBox x:Name="ProfileTextBox" Watermark="Configuration profile name (optional)"/>
+                </StackPanel>
+                
+                <StackPanel Classes="Option">
+                    <TextBlock>Proxy Type:</TextBlock>
+                    <ComboBox x:Name="ProxyTypeComboBox" Width="200" Margin="0,0,0,5">
+                        <ComboBoxItem>None</ComboBoxItem>
+                        <ComboBoxItem>HTTP</ComboBoxItem>
+                        <ComboBoxItem>SOCKS</ComboBoxItem>
+                    </ComboBox>
+
+                    <Grid x:Name="ProxyHostPortGrid" ColumnDefinitions="*,*" IsVisible="False">
+                        <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                            <TextBlock>Proxy Host:</TextBlock>
+                            <TextBox x:Name="ProxyHostTextBox" Watermark="hostname or IP"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                            <TextBlock>Proxy Port:</TextBlock>
+                            <TextBox x:Name="ProxyPortTextBox" Watermark="port number"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid x:Name="ProxyCredentialsGrid" ColumnDefinitions="*,*" IsVisible="False" Margin="0,5,0,0">
+                        <StackPanel Grid.Column="0" Margin="0,0,5,0">
+                            <TextBlock>Username (optional):</TextBlock>
+                            <TextBox x:Name="ProxyUserTextBox" Watermark="username"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                            <TextBlock>Password (optional):</TextBlock>
+                            <TextBox x:Name="ProxyPasswordTextBox" PasswordChar="•" Watermark="password"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+                
+                <TextBlock Classes="Header">Raw Arguments</TextBlock>
+                <TextBox x:Name="RawArgumentsTextBox" Height="100" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"/>
+            </StackPanel>
+        </ScrollViewer>
+        
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button x:Name="CancelButton" Content="Cancel" Margin="0,0,5,0" Width="80"/>
+            <Button x:Name="OkButton" Content="OK" Width="80"/>
+        </StackPanel>
+    </Grid>
+</Window>

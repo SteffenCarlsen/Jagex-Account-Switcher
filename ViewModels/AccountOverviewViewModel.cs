@@ -4,19 +4,27 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
+using DialogHostAvalonia;
 using JagexAccountSwitcher.Converters;
 using JagexAccountSwitcher.Helpers;
 using JagexAccountSwitcher.Model;
+using JagexAccountSwitcher.Views;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
+using ReactiveUI;
 
 namespace JagexAccountSwitcher.ViewModels
 {
     public class AccountOverviewViewModel : INotifyPropertyChanged
     {
+        
         private ObservableCollection<RunescapeAccount> _accounts;
         private RunescapeAccount _selectedAccount;
         private readonly UserSettings _userSettings;
@@ -40,6 +48,7 @@ namespace JagexAccountSwitcher.ViewModels
                 OnPropertyChanged(nameof(SelectedAccount));
                 ((RelayCommand)DeleteAccountCommand).RaiseCanExecuteChanged();
                 ((RelayCommand)SwitchToAccountCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)SetClientArgumentsCommand).RaiseCanExecuteChanged();
             }
         }
 
@@ -47,6 +56,7 @@ namespace JagexAccountSwitcher.ViewModels
         public ICommand RefreshAccountsCommand { get; }
         public ICommand DeleteAccountCommand { get; }
         public ICommand SwitchToAccountCommand { get; }
+        public ICommand SetClientArgumentsCommand { get; }
 
         public AccountOverviewViewModel(UserSettings userSettings)
         {
@@ -57,7 +67,7 @@ namespace JagexAccountSwitcher.ViewModels
             RefreshAccountsCommand = new RelayCommand(RefreshAccounts, () => Accounts.Count > 0);
             DeleteAccountCommand = new RelayCommand(DeleteAccount, HasAccountSelected);
             SwitchToAccountCommand = new RelayCommand(SetActiveAccount, HasAccountSelected, IsNotAlreadyActiveAccount);
-            
+            SetClientArgumentsCommand = new RelayCommand(UpdateClientArgs, HasAccountSelected);
             LoadAccounts();
         }
 
@@ -152,6 +162,32 @@ namespace JagexAccountSwitcher.ViewModels
         {
             RuneliteHelper.SaveAccounts(Accounts, _userSettings.ConfigurationsPath);
         }
+
+        private void UpdateClientArgs()
+        {
+            var dialog = new ClientArgumentsDialog(SelectedAccount.ClientArguments ?? string.Empty);
+    
+            // Get the main window to use as owner
+            var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+                ? desktop.MainWindow
+                : null;
+    
+            // Show dialog as modal (blocks until dialog is closed)
+            dialog.ShowDialog(mainWindow!).ContinueWith(t => 
+            {
+                if (dialog.ClientArguments != null)
+                {
+                    // This needs to run on the UI thread
+                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    {
+                        SelectedAccount.ClientArguments = dialog.ClientArguments;
+                        SaveAccounts();
+                        OnPropertyChanged(nameof(Accounts));
+                    });
+                }
+            });
+        }
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 

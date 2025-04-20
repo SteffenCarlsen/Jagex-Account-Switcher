@@ -95,7 +95,7 @@ namespace JagexAccountSwitcher.ViewModels
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = "javaw.exe",
-                    Arguments = $"-jar \"{_settings.MicroBotJarPath}\"",
+                    Arguments = $"-jar \"{_settings.MicroBotJarPath}\"" + $" {model.Account.ClientArguments}",
                     UseShellExecute = false
                 };
                 var process = Process.Start(startInfo);

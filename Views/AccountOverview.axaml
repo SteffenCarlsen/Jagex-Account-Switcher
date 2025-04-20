@@ -7,36 +7,70 @@
              xmlns:converters="clr-namespace:JagexAccountSwitcher.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="JagexAccountSwitcher.Views.AccountOverview"
-             x:CompileBindings="True"
+             x:CompileBindings="False"
              x:DataType="vm:AccountOverviewViewModel"
-             d:DataContext="{d:DesignInstance Type=vm:AccountOverviewViewModel, IsDesignTimeCreatable=True}">
+             d:DataContext="{d:DesignInstance Type=vm:AccountOverviewViewModel, IsDesignTimeCreatable=True}"
+             x:Name="AccountOverviewControl">
     <UserControl.Resources>
         <converters:BoolToSymbolConverter x:Key="BoolToSymbolConverter" TrueValue="✓" FalseValue="✗"/>
         <converters:BoolToColorConverter x:Key="BoolToColorConverter" TrueValue="Green" FalseValue="Red"/>
     </UserControl.Resources>
     <Grid RowDefinitions="Auto,Auto,*,Auto">
         <!-- Header row -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="10,5,10,0">
-            <TextBlock Grid.Column="0" Text="Account Name" FontWeight="Bold" Margin="5"/>
-            <TextBlock Grid.Column="1" Text="Active" FontWeight="Bold" MinWidth="60" TextAlignment="Center" Margin="5"/>
+        <Grid Grid.Row="1" ColumnDefinitions="150,120,*" Margin="10,5,10,0">
+            <TextBlock Grid.Column="0" Text="Account Name" FontWeight="Bold" Margin="5" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Text="Active" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Left" Margin="5"/>
+            <TextBlock Grid.Column="2" Text="Has Client arguments" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Center" Margin="5"/>
         </Grid>
-    
-        <ListBox Grid.Row="2" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" Margin="10,0,10,10">
-            <ListBox.ItemTemplate>
-                <DataTemplate x:DataType="model:RunescapeAccount">
-                    <Grid ColumnDefinitions="*,Auto">
-                        <TextBlock Grid.Column="0" Text="{Binding AccountName}" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" 
-                                   Text="{Binding IsActiveAccount, Converter={StaticResource BoolToSymbolConverter}}" 
-                                   Foreground="{Binding IsActiveAccount, Converter={StaticResource BoolToColorConverter}}"
-                                   MinWidth="60"
-                                   TextAlignment="Center"
-                                   FontWeight="Bold"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
 
+        <ListBox Grid.Row="2" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" Margin="10,0,10,10">
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Header="Switch to account"
+                                          Command="{Binding DataContext.SwitchToAccountCommand, ElementName=AccountOverviewControl}"
+                                          CommandParameter="{Binding}"/>
+                                <MenuItem Header="Set Client Arguments"
+                                          Command="{Binding DataContext.SetClientArgumentsCommand, ElementName=AccountOverviewControl}"
+                                          CommandParameter="{Binding}"/>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.Styles>
+    <ListBox.ItemTemplate>
+        <DataTemplate x:DataType="model:RunescapeAccount">
+            <Grid ColumnDefinitions="150,120,*">
+                <TextBlock Grid.Column="0" Text="{Binding AccountName}" Margin="5" HorizontalAlignment="Left"/>
+
+                <!-- Active status indicator -->
+                <TextBlock Grid.Column="1"
+                           Text="{Binding IsActiveAccount, Converter={StaticResource BoolToSymbolConverter}}"
+                           Foreground="{Binding IsActiveAccount, Converter={StaticResource BoolToColorConverter}}"
+                           TextAlignment="Center"
+                           FontWeight="Bold"
+                           Margin="5"
+                           HorizontalAlignment="Left"/>
+
+                <!-- Client arguments indicator -->
+                <TextBlock Grid.Column="2"
+                           Text="{Binding HasClientArguments, Converter={StaticResource BoolToSymbolConverter}}"
+                           Foreground="{Binding HasClientArguments, Converter={StaticResource BoolToColorConverter}}"
+                           TextAlignment="Center"
+                           FontWeight="Bold"
+                           Margin="5"
+                           HorizontalAlignment="Center">
+                    <ToolTip.Tip>
+                        <TextBlock Text="{Binding ClientArguments}"
+                                   IsVisible="{Binding HasClientArguments}"/>
+                    </ToolTip.Tip>
+                </TextBlock>
+            </Grid>
+        </DataTemplate>
+    </ListBox.ItemTemplate>
+</ListBox>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="10" HorizontalAlignment="Right">
             <Button Content="Import account" Command="{Binding AddAccountCommand}" Margin="5"/>
             <Button Content="Refresh active account" Command="{Binding RefreshAccountsCommand}" Margin="5"/>

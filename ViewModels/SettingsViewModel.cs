@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 using JagexAccountSwitcher.Model;
@@ -58,7 +59,7 @@ namespace JagexAccountSwitcher.ViewModels
             // Subscribe to property changes from UserSettings
             _userSettings.PropertyChanged += UserSettings_PropertyChanged;
         }
-
+        
         private void UserSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             // When UserSettings properties change, notify the UI
@@ -102,7 +103,7 @@ namespace JagexAccountSwitcher.ViewModels
 
         public void Dispose()
         {
-            _userSettings.PropertyChanged -= UserSettings_PropertyChanged;
+            _userSettings.PropertyChanged -= UserSettings_PropertyChanged!;
         }
 
         public async Task BrowseMicrobotJarPath()
