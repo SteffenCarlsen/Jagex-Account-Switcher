@@ -3,7 +3,7 @@
 
 This program allows you to easily switch profiles without using the Jagex Launcher directly. The program is designed to be used in conjunction with [Microbot](https://github.com/chsami/Microbot). However can be used as a standalone for other clients that use the runelite credential system to launch.
 ## Account overview
-![JagexAccountSwitcher_TTEXxXZUlg](https://github.com/user-attachments/assets/6d2ef423-6162-4ab7-ad62-4807d789fe3c)
+![image](https://github.com/user-attachments/assets/e551f722-a296-431a-b6b4-f293b434515b)
 
 Here you setup your accounts. You can add, remove and switch manually to an account. Please read the "Guide" on how to add new runelite profiles to the program.
 
