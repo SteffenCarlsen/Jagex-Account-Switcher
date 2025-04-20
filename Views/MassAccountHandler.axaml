@@ -70,6 +70,10 @@
                        Cursor="Help"
                        FontSize="15"
                        ToolTip.Tip="Be aware that mass starting accounts means that all MicroBot instances are children of this program. Closing down this program will closed all instances."/>
+            <CheckBox Content="Show debug console" 
+                      IsChecked="{Binding ShowClientOutput}"
+                      Margin="15,0,0,0"
+                      VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </UserControl>

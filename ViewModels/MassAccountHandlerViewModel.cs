@@ -41,6 +41,23 @@ namespace JagexAccountSwitcher.ViewModels
                 OnPropertyChanged();
             }
         }
+        private bool _showClientOutput;
+        public bool ShowClientOutput
+        {
+            get => _showClientOutput;
+            set
+            {
+                _showClientOutput = value;
+        
+                // Toggle console visibility
+                if (value)
+                    ConsoleHelper.ShowConsole();
+                else
+                    ConsoleHelper.HideConsole();
+            
+                OnPropertyChanged();
+            }
+        }
         
         public ICommand StartAllCommand { get; }
         public ICommand KillClientCommand { get; }
@@ -72,7 +89,7 @@ namespace JagexAccountSwitcher.ViewModels
                     
                 }
             };
-            
+            _showClientOutput = ConsoleHelper.IsConsoleVisible();
             // Start a timer to update process lifetimes
             Task.Run(UpdateProcessLifetimes);
         }
@@ -85,65 +102,101 @@ namespace JagexAccountSwitcher.ViewModels
         private void StartClient(MassAccountLinkerModel model)
         {
             if (string.IsNullOrWhiteSpace(_settings.MicroBotJarPath)) return;
-        
+
             // Check if already running
             if (model.Process != null && !model.Process.HasExited)
                 return;
-            
+    
             if (RuneliteHelper.SetActiveAccount(model.Account, _viewModel.Accounts, _settings.ConfigurationsPath, _settings.RunelitePath))
             {
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = "javaw.exe",
                     Arguments = $"-jar{(model.Account.ClientArguments != null && model.Account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {model.Account.ClientArguments}",
-                    UseShellExecute = false
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
                 };
-                var process = Process.Start(startInfo);
-                if (process != null)
-                {
-                    Dispatcher.UIThread.InvokeAsync(() => {
-                        model.Process = process;
-                        model.ProcessLifetime = $"Runtime: {DateTime.Now - process.StartTime:hh\\:mm\\:ss}";
-                    });
-                }
+        
+                var process = new Process { StartInfo = startInfo };
+        
+                // Set up output redirection
+                process.OutputDataReceived += (sender, args) => {
+                    if (!string.IsNullOrEmpty(args.Data) && ConsoleHelper.IsConsoleVisible())
+                        Console.WriteLine($"[{model.Account.AccountName}] {args.Data}");
+                };
+        
+                process.ErrorDataReceived += (sender, args) => {
+                    if (!string.IsNullOrEmpty(args.Data) && ConsoleHelper.IsConsoleVisible())
+                        Console.WriteLine($"[{model.Account.AccountName}] ERROR: {args.Data}");
+                };
+        
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+        
+                Dispatcher.UIThread.InvokeAsync(() => {
+                    model.Process = process;
+                    model.ProcessLifetime = $"Runtime: {DateTime.Now - process.StartTime:hh\\:mm\\:ss}";
+                });
+        
                 RuneliteHelper.SaveAccounts(_viewModel.Accounts, _settings.ConfigurationsPath);
             }
         }
 
-        private void StartAllAccounts()
+private void StartAllAccounts()
+{
+    if (string.IsNullOrWhiteSpace(_settings.MicroBotJarPath)) return;
+    foreach (var account in _viewModel.Accounts)
+    {
+        // Check if the account is already running
+        if (AccountProcesses.Any(x => x.Account == account && x.Process is { HasExited: false }))
         {
-            if (string.IsNullOrWhiteSpace(_settings.MicroBotJarPath)) return;
-            foreach (var account in _viewModel.Accounts)
-            {
-                // Check if the account is already running
-                if (AccountProcesses.Any(x => x.Account == account && x.Process is { HasExited: false }))
-                {
-                    continue;
-                }
-                if (RuneliteHelper.SetActiveAccount(account, _viewModel.Accounts, _settings.ConfigurationsPath, _settings.RunelitePath))
-                {
-                    var startInfo = new ProcessStartInfo
-                    {
-                        FileName = "javaw.exe",
-                        Arguments = $"-jar \"{_settings.MicroBotJarPath}\"",
-                        UseShellExecute = false
-                    };
-                    var process = Process.Start(startInfo);
-                    if (process != null)
-                    {
-                        var model = AccountProcesses.FirstOrDefault(x => x.Account == account);
-                        if (model != null)
-                        {
-                            Dispatcher.UIThread.InvokeAsync(() => {
-                                model.Process = process;
-                                model.ProcessLifetime = $"Runtime: {DateTime.Now - process.StartTime:hh\\:mm\\:ss}";
-                            });
-                        }
-                    }
-                    RuneliteHelper.SaveAccounts(_viewModel.Accounts, _settings.ConfigurationsPath);
-                }
-            }
+            continue;
         }
+        if (RuneliteHelper.SetActiveAccount(account, _viewModel.Accounts, _settings.ConfigurationsPath, _settings.RunelitePath))
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "javaw.exe",
+                Arguments = $"-jar \"{_settings.MicroBotJarPath}\"" + $" {account.ClientArguments}",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true
+            };
+            
+            var process = new Process { StartInfo = startInfo };
+            
+            // Set up output redirection
+            process.OutputDataReceived += (sender, args) => {
+                if (!string.IsNullOrEmpty(args.Data) && ConsoleHelper.IsConsoleVisible())
+                    Console.WriteLine($"[{account.AccountName}:] {args.Data}");
+            };
+            
+            process.ErrorDataReceived += (sender, args) => {
+                if (!string.IsNullOrEmpty(args.Data) && ConsoleHelper.IsConsoleVisible())
+                    Console.WriteLine($"[{account.AccountName}:] ERROR: {args.Data}");
+            };
+            
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            
+            var model = AccountProcesses.FirstOrDefault(x => x.Account == account);
+            if (model != null)
+            {
+                Dispatcher.UIThread.InvokeAsync(() => {
+                    model.Process = process;
+                    model.ProcessLifetime = $"Runtime: {DateTime.Now - process.StartTime:hh\\:mm\\:ss}";
+                });
+            }
+            
+            RuneliteHelper.SaveAccounts(_viewModel.Accounts, _settings.ConfigurationsPath);
+        }
+    }
+}
         
         private async Task UpdateProcessLifetimes()
         {
