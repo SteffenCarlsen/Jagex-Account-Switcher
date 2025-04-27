@@ -8,15 +8,11 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        configuration: [Release]
-
+  build-windows:
     runs-on: windows-latest
-
     env:
       Solution_Name: JagexAccountSwitcher.csproj
+      Configuration: Release
 
     steps:
       - name: Checkout
@@ -34,57 +30,140 @@ jobs:
 
       - name: Restore the application
         run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-        env:
-          Configuration: ${{ matrix.configuration }}
 
       - name: Build the application
         run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
-        env:
-          Configuration: ${{ matrix.configuration }}
-
-      - name: Publish the application - Windows
-        run: |
-          mkdir -p out
-          dotnet publish JagexAccountSwitcher.csproj -c Release -o out/JagexAccountSwitcher-windows
-        shell: bash
-
-      - name: Publish the application - MacOS
-        run: |
-          dotnet publish JagexAccountSwitcher.csproj -c Release -r osx-x64 --self-contained true -o out/JagexAccountSwitcher-macos
-        shell: bash
 
       - name: Extract version from csproj
         id: extract_version
         run: |
-          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' JagexAccountSwitcher.csproj)
-          echo "VERSION=$version" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Create zip file for windows
-        run: |
-          Compress-Archive -Path out/JagexAccountSwitcher-windows/* -DestinationPath out/JagexAccountSwitcher_windows_v${{ env.VERSION }}.zip
+          $version = Select-String -Path $env:Solution_Name -Pattern "<Version>(.*)</Version>" | ForEach-Object { $_.Matches.Groups[1].Value }
+          echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
-      - name: Create zip file for MacOS
-        run: |
-          Compress-Archive -Path out/JagexAccountSwitcher-macos/* -DestinationPath out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
+      - name: Publish for Windows
+        run: dotnet publish $env:Solution_Name -c $env:Configuration -o out/JagexAccountSwitcher-windows
+
+      - name: Create Windows zip file
+        run: Compress-Archive -Path out/JagexAccountSwitcher-windows/* -DestinationPath out/JagexAccountSwitcher_windows_v${{ env.VERSION }}.zip
         shell: pwsh
 
-      - name: Upload build artifacts
+      - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PublishedApp
-          path: out
+          name: WindowsApp
+          path: out/JagexAccountSwitcher_windows_v${{ env.VERSION }}.zip
 
-      - name: Create a Release
+      - name: Save version for other jobs
+        run: echo "${{ env.VERSION }}" > version.txt
+
+      - name: Upload version file
+        uses: actions/upload-artifact@v4
+        with:
+          name: version-info
+          path: version.txt
+
+  build-macos:
+    runs-on: macos-latest
+    env:
+      Solution_Name: JagexAccountSwitcher.csproj
+      Configuration: Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download version
+        uses: actions/download-artifact@v4
+        with:
+          name: version-info
+
+      - name: Set version variable
+        run: echo "VERSION=$(cat version.txt)" >> $GITHUB_ENV
+
+      - name: Create app bundle structure
+        run: mkdir -p out/JagexAccountSwitcher.app/Contents/{MacOS,Resources}
+
+      - name: Publish for macOS
+        run: dotnet publish $Solution_Name -c $Configuration -r osx-x64 --self-contained true -o out/JagexAccountSwitcher.app/Contents/MacOS
+
+      - name: Create Info.plist
+        run: |
+          cat > out/JagexAccountSwitcher.app/Contents/Info.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>JagexAccountSwitcher</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.steffencarlsen.jagexaccountswitcher</string>
+              <key>CFBundleName</key>
+              <string>JagexAccountSwitcher</string>
+              <key>CFBundleDisplayName</key>
+              <string>Jagex Account Switcher</string>
+              <key>CFBundleVersion</key>
+              <string>${VERSION}</string>
+              <key>CFBundleShortVersionString</key>
+              <string>${VERSION}</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>NSHighResolutionCapable</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Set executable permissions
+        run: chmod +x out/JagexAccountSwitcher.app/Contents/MacOS/JagexAccountSwitcher
+
+      - name: Create DMG
+        run: |
+          hdiutil create -volname "JagexAccountSwitcher" -srcfolder out/JagexAccountSwitcher.app -ov -format UDZO out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.dmg
+
+      - name: Create zip file as backup
+        run: ditto -c -k --sequesterRsrc --keepParent out/JagexAccountSwitcher.app out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacOSApp
+          path: |
+            out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.dmg
+            out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
+
+  create-release:
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Download version
+        uses: actions/download-artifact@v4
+        with:
+          name: version-info
+
+      - name: Set version variable
+        run: echo "VERSION=$(cat version-info/version.txt)" >> $GITHUB_ENV
+
+      - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.VERSION }}
-          release_name: JagexAccountSwitcher Release v${{ env.VERSION }} - ${{ github.event.head_commit.timestamp }}
-          body: "Release of version ${{ env.VERSION }} on ${{ github.event.head_commit.timestamp }}"
+          release_name: JagexAccountSwitcher Release v${{ env.VERSION }}
+          body: "Release of version ${{ env.VERSION }}"
           draft: false
           prerelease: false
 
@@ -94,16 +173,26 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./out/JagexAccountSwitcher_windows_v${{ env.VERSION }}.zip
+          asset_path: ./WindowsApp/JagexAccountSwitcher_windows_v${{ env.VERSION }}.zip
           asset_name: JagexAccountSwitcher_windows_v${{ env.VERSION }}.zip
           asset_content_type: application/zip
 
-      - name: Upload MacOS Release Asset
+      - name: Upload macOS DMG Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
+          asset_path: ./MacOSApp/JagexAccountSwitcher_macos_v${{ env.VERSION }}.dmg
+          asset_name: JagexAccountSwitcher_macos_v${{ env.VERSION }}.dmg
+          asset_content_type: application/x-apple-diskimage
+
+      - name: Upload macOS App ZIP Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./MacOSApp/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
           asset_name: JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
           asset_content_type: application/zip
