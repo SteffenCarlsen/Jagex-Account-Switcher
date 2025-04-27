@@ -8,7 +8,7 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <LangVersion>default</LangVersion>
     <ApplicationIcon>Assets\icons8-intelligence-64.ico</ApplicationIcon>
-    <Version>1.3.4</Version>
+    <Version>1.3.5</Version>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
   </PropertyGroup>
