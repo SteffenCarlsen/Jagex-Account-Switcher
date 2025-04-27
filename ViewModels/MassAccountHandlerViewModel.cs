@@ -50,10 +50,17 @@ namespace JagexAccountSwitcher.ViewModels
                 _showClientOutput = value;
         
                 // Toggle console visibility
+#if WINDOWS
                 if (value)
+                {
                     ConsoleHelper.ShowConsole();
+                } 
                 else
+                {
                     ConsoleHelper.HideConsole();
+                }
+#endif
+                
             
                 OnPropertyChanged();
             }

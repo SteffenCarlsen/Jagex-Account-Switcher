@@ -8,15 +8,11 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        configuration: [Release]
-
+  build-windows:
     runs-on: windows-latest
-
     env:
       Solution_Name: JagexAccountSwitcher.csproj
+      Configuration: Release
 
     steps:
       - name: Checkout
@@ -34,37 +30,86 @@ jobs:
 
       - name: Restore the application
         run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-        env:
-          Configuration: ${{ matrix.configuration }}
 
       - name: Build the application
         run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
-        env:
-          Configuration: ${{ matrix.configuration }}
-
-      - name: Publish the application
-        run: |
-          mkdir -p out
-          dotnet publish JagexAccountSwitcher.csproj -c Release -o out/JagexAccountSwitcher
-        shell: bash
 
       - name: Extract version from csproj
         id: extract_version
         run: |
-          version=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' JagexAccountSwitcher.csproj)
-          echo "VERSION=$version" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Create zip file
-        run: |
-          Compress-Archive -Path out/JagexAccountSwitcher/* -DestinationPath out/JagexAccountSwitcher_v${{ env.VERSION }}.zip
+          $version = Select-String -Path $env:Solution_Name -Pattern "<Version>(.*)</Version>" | ForEach-Object { $_.Matches.Groups[1].Value }
+          echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
-      - name: Upload build artifacts
+      - name: Publish the Windows application
+        run: dotnet publish $env:Solution_Name -c $env:Configuration -r win-x64 --self-contained true -o out/windows/JagexAccountSwitcher
+
+      - name: Create Windows zip file
+        run: Compress-Archive -Path out/windows/JagexAccountSwitcher/* -DestinationPath out/JagexAccountSwitcher_Windows_v${{ env.VERSION }}.zip
+        shell: pwsh
+
+      - name: Upload Windows build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: PublishedApp
-          path: out
+          name: WindowsApp
+          path: out/JagexAccountSwitcher_Windows_v${{ env.VERSION }}.zip
+
+      - name: Save version for other jobs
+        run: echo "${{ env.VERSION }}" > version.txt
+
+      - name: Upload version file
+        uses: actions/upload-artifact@v4
+        with:
+          name: version
+          path: version.txt
+
+  build-macos:
+    runs-on: macos-latest
+    env:
+      Solution_Name: JagexAccountSwitcher.csproj
+      Configuration: Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish the macOS application
+        run: dotnet publish $Solution_Name -c $Configuration -r osx-x64 --self-contained true -o out/macos/JagexAccountSwitcher
+
+      - name: Create macOS zip file
+        run: cd out/macos && zip -r ../../JagexAccountSwitcher_macOS.zip JagexAccountSwitcher
+
+      - name: Upload macOS build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacOSApp
+          path: JagexAccountSwitcher_macOS.zip
+
+  create-release:
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Download version
+        uses: actions/download-artifact@v4
+        with:
+          name: version
+
+      - name: Set version variable
+        run: echo "VERSION=$(cat version/version.txt)" >> $GITHUB_ENV
+
+      - name: Rename macOS zip with version
+        run: mv MacOSApp/JagexAccountSwitcher_macOS.zip MacOSApp/JagexAccountSwitcher_macOS_v${{ env.VERSION }}.zip
 
       - name: Create a Release
         id: create_release
@@ -73,17 +118,27 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.VERSION }}
-          release_name: JagexAccountSwitcher Release v${{ env.VERSION }} - ${{ github.event.head_commit.timestamp }}
-          body: "Release of version ${{ env.VERSION }} on ${{ github.event.head_commit.timestamp }}"
+          release_name: JagexAccountSwitcher Release v${{ env.VERSION }}
+          body: "Release of version ${{ env.VERSION }}"
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload Windows Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./out/JagexAccountSwitcher_v${{ env.VERSION }}.zip
-          asset_name: JagexAccountSwitcher_v${{ env.VERSION }}.zip
+          asset_path: ./WindowsApp/JagexAccountSwitcher_Windows_v${{ env.VERSION }}.zip
+          asset_name: JagexAccountSwitcher_Windows_v${{ env.VERSION }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload macOS Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./MacOSApp/JagexAccountSwitcher_macOS_v${{ env.VERSION }}.zip
+          asset_name: JagexAccountSwitcher_macOS_v${{ env.VERSION }}.zip
           asset_content_type: application/zip

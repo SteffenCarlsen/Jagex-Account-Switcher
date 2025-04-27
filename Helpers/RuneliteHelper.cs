@@ -25,7 +25,7 @@ namespace JagexAccountSwitcher.Helpers
             }
             
             // Handle the case where the path does not exist
-            throw new DirectoryNotFoundException($"Runelite path not found: {runelitePath}");
+            return "UNKNOWN_RUNELITE_PATH_PLEASE_SET_MANUALLY";
         }
         
         /// <summary>
