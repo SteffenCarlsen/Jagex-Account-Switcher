@@ -72,7 +72,10 @@ namespace JagexAccountSwitcher.Helpers
 
         public static bool IsConsoleVisible()
         {
-            return GetConsoleWindow() != IntPtr.Zero;
+#if WINDOWS
+            return GetConsoleWindow() != IntPtr.Zero;    
+#endif
+            return false;
         }
     }
 }
