@@ -86,8 +86,10 @@ jobs:
         with:
           name: version-info
 
-      - name: Set version variable
-        run: echo "VERSION=$(cat version.txt)" >> $GITHUB_ENV
+    - name: Set version variable
+      run: |
+        VERSION=$(cat version.txt | tr -d '\r\n')
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Create app bundle structure
         run: mkdir -p out/JagexAccountSwitcher.app/Contents/{MacOS,Resources}
