@@ -86,10 +86,10 @@ jobs:
         with:
           name: version-info
 
-    - name: Set version variable
-      run: |
-        VERSION=$(cat version.txt | tr -d '\r\n')
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Set version variable
+        run: |
+          VERSION=$(cat version.txt | tr -d '\r\n')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Create app bundle structure
         run: mkdir -p out/JagexAccountSwitcher.app/Contents/{MacOS,Resources}
@@ -153,7 +153,6 @@ jobs:
 
       - name: Set version variable
         run: |
-          # Read version and sanitize it
           VERSION=$(cat version-info/version.txt | tr -d '\r\n')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
@@ -167,7 +166,7 @@ jobs:
           release_name: JagexAccountSwitcher Release v${{ env.VERSION }}
           body: |
             Release of version ${{ env.VERSION }}
-            
+
             **macOS Users:**
             After downloading and unzipping, right-click the app and select "Open", then confirm you want to open it in the security dialog.
           draft: false
