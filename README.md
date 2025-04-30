@@ -21,3 +21,29 @@ If you want to use the *Account Handler*, you will need to direct a Microbot jar
 
 ## Guide
 ![JagexAccountSwitcher_J6hSq9qPzw](https://github.com/user-attachments/assets/9e1da8f2-1b19-49e2-be55-7aaafb5152ce)
+
+## Lauching the program on OSX
+Thanks to slest for the guide.
+####  Step 1: Move the app to applications
+
+1. Open **Finder**.
+
+2. Move the `JagexAccountSwitcher.app` from `/Downloads` into the `/Applications` folder. (Just drag it to the Applications folder)
+
+or
+
+`# Example Terminal command if needed: mv ~/Downloads/JagexAccountSwitcher.app /Applications/`
+
+
+####  Step 2: Fix macOS Security Permissions
+
+
+`xattr -cr /Applications/JagexAccountSwitcher.app`
+
+> This removes the "quarantine" tag macOS adds to apps from the internet.
+
+
+####  Step 3: Launch the App via Terminal
+
+
+`cd /Applications/JagexAccountSwitcher.app/Contents/MacOS/ ./JagexAccountSwitcher`
