@@ -110,6 +110,8 @@ jobs:
               <string>JagexAccountSwitcher</string>
               <key>CFBundleDisplayName</key>
               <string>Jagex Account Switcher</string>
+              <key>CFBundleIconFile</key>
+              <string>AppIcon.icns</string>
               <key>CFBundleVersion</key>
               <string>${VERSION}</string>
               <key>CFBundleShortVersionString</key>
@@ -125,33 +127,15 @@ jobs:
       - name: Set executable permissions
         run: chmod +x out/JagexAccountSwitcher.app/Contents/MacOS/JagexAccountSwitcher
 
-      - name: Set version variable and sanitize it
-        run: |
-          # Extract version from file
-          VERSION=$(cat version.txt)
-          # Sanitize version (remove any problematic characters)
-          CLEAN_VERSION=$(echo "$VERSION" | tr -d '\r\n')
-          echo "VERSION=$CLEAN_VERSION" >> $GITHUB_ENV
-
-      - name: Create DMG
-        run: |
-          hdiutil create -volname "JagexAccountSwitcher" \
-            -srcfolder out/JagexAccountSwitcher.app \
-            -ov \
-            -format UDZO \
-            "out/JagexAccountSwitcher_macos_v${VERSION}.dmg"
-          
-      - name: Create zip file as backup
+      - name: Create macOS ZIP file
         run: ditto -c -k --sequesterRsrc --keepParent out/JagexAccountSwitcher.app out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
           name: MacOSApp
-          path: |
-            out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.dmg
-            out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
-  
+          path: out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
+
   create-release:
     needs: [ build-windows, build-macos ]
     runs-on: ubuntu-latest
@@ -179,7 +163,11 @@ jobs:
         with:
           tag_name: v${{ env.VERSION }}
           release_name: JagexAccountSwitcher Release v${{ env.VERSION }}
-          body: "Release of version ${{ env.VERSION }}"
+          body: |
+            Release of version ${{ env.VERSION }}
+            
+            **macOS Users:**
+            After downloading and unzipping, right-click the app and select "Open", then confirm you want to open it in the security dialog.
           draft: false
           prerelease: false
 
@@ -192,16 +180,6 @@ jobs:
           asset_path: ./WindowsApp/JagexAccountSwitcher_windows_v${{ env.VERSION }}.zip
           asset_name: JagexAccountSwitcher_windows_v${{ env.VERSION }}.zip
           asset_content_type: application/zip
-
-      - name: Upload macOS DMG Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./MacOSApp/JagexAccountSwitcher_macos_v${{ env.VERSION }}.dmg
-          asset_name: JagexAccountSwitcher_macos_v${{ env.VERSION }}.dmg
-          asset_content_type: application/x-apple-diskimage
 
       - name: Upload macOS App ZIP Release Asset
         uses: actions/upload-release-asset@v1
