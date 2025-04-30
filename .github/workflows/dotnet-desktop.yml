@@ -143,6 +143,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code with history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
 
@@ -156,6 +161,25 @@ jobs:
           VERSION=$(cat version-info/version.txt | tr -d '\r\n')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
+      - name: Get commit messages since last tag
+        id: get_commits
+        run: |
+          # Get the most recent tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LAST_TAG" ]; then
+            # If no tags exist, get all commit messages
+            COMMITS=$(git log --pretty=format:"- %s" --no-merges)
+          else
+            # Get commit messages between the last tag and HEAD
+            COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s" --no-merges)
+          fi
+
+          # Save commits to output with multiline support
+          echo "COMMITS<<EOF" >> $GITHUB_ENV
+          echo "$COMMITS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -166,9 +190,8 @@ jobs:
           release_name: JagexAccountSwitcher Release v${{ env.VERSION }}
           body: |
             Release of version ${{ env.VERSION }}
-
-            **macOS Users:**
-            After downloading and unzipping, right-click the app and select "Open", then confirm you want to open it in the security dialog.
+            ### Changes since last release:
+            ${{ env.COMMITS }}
           draft: false
           prerelease: false
 
