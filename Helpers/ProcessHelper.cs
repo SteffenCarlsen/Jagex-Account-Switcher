@@ -1,7 +1,11 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Diagnostics;
 using Avalonia.Threading;
 using JagexAccountSwitcher.Model;
+
+#endregion
 
 namespace JagexAccountSwitcher.Helpers;
 
@@ -9,38 +13,79 @@ public static class ProcessHelper
 {
     public static void KillClient(MassAccountLinkerModel model)
     {
-        if (model?.Process != null && !model.Process.HasExited)
+        if (model?.Process == null || model.Process.HasExited) return;
+
+        try
         {
-            try
+            // Store info before attempting to kill
+            var processId = model.Process.Id;
+
+            // Try standard approach first
+            model.Process.CloseMainWindow();
+
+            if (!model.Process.WaitForExit(2000))
             {
-                // Try graceful shutdown first
-                model.Process.CloseMainWindow();
-                model.Process.Kill();
-            
-                // If process doesn't respond within a reasonable time, force kill the entire tree
-                if (!model.Process.WaitForExit(1000))
+                try
                 {
-                    // Kill process tree using taskkill command
-                    int processId = model.Process.Id;
-                    var killProcess = new ProcessStartInfo
-                    {
-                        FileName = "taskkill",
-                        Arguments = $"/F /T /PID {processId}",
-                        CreateNoWindow = true,
-                        UseShellExecute = false
-                    };
-                    Process.Start(killProcess)?.WaitForExit();
+                    // Try direct kill
+                    model.Process.Kill(true);
+                    model.Process.WaitForExit(1000);
                 }
-            
-                Dispatcher.UIThread.InvokeAsync(() => {
-                    model.Process = null;
-                    model.ProcessLifetime = string.Empty;
-                });
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Kill failed: {ex.Message}");
+                }
+
+                // Try more aggressive taskkill approach
+                var killProcess = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/c taskkill /F /T /PID {processId} & taskkill /F /IM javaw.exe /FI \"PID eq {processId}\" & taskkill /F /IM java.exe /FI \"PID eq {processId}\"",
+                    CreateNoWindow = true,
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+
+                using (var process = Process.Start(killProcess))
+                {
+                    process?.WaitForExit();
+                }
+
+                // Double-check if the process is truly gone
+                try
+                {
+                    var checkProcess = Process.GetProcessById(processId);
+                    if (!checkProcess.HasExited)
+                    {
+                        Console.WriteLine($"Process {processId} still alive, using final termination attempt");
+                        // Use even more aggressive approach with WMIC
+                        var wmicKill = new ProcessStartInfo
+                        {
+                            FileName = "wmic",
+                            Arguments = $"process where processid=\"{processId}\" call terminate",
+                            CreateNoWindow = true,
+                            UseShellExecute = true,
+                            Verb = "runas"
+                        };
+                        Process.Start(wmicKill)?.WaitForExit();
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Process not found, which means it was successfully terminated
+                    Console.WriteLine("Process was successfully terminated");
+                }
             }
-            catch (Exception ex)
+
+            Dispatcher.UIThread.InvokeAsync(() =>
             {
-                Console.WriteLine(ex.Message);
-            }
+                model.Process = null;
+                model.ProcessLifetime = string.Empty;
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error killing process: {ex.Message}");
         }
     }
 }
