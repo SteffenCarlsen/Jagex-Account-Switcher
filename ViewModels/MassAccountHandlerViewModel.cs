@@ -84,22 +84,52 @@ namespace JagexAccountSwitcher.ViewModels
             StartAllCommand = new RelayCommand(StartAllAccounts);
             KillClientCommand = new Helpers.RelayCommand<MassAccountLinkerModel>(KillClient);
             StartClientCommand = new Helpers.RelayCommand<MassAccountLinkerModel>(StartClient);
-            foreach (var account in _viewModel.Accounts)
+
+            // Initialize with accounts directly in the constructor (synchronously)
+            if (_viewModel.Accounts != null)
             {
-                _accountProcesses.Add(new MassAccountLinkerModel() { Account = account });
+                foreach (var account in _viewModel.Accounts)
+                {
+                    _accountProcesses.Add(new MassAccountLinkerModel() { Account = account });
+                }
             }
-            
-            // Subscribe to property changes for process lifetime updates
-            PropertyChanged += (sender, args) => 
+
+            // Subscribe to future account changes
+            _viewModel.Accounts.CollectionChanged += (sender, args) =>
+            {
+                UpdateAccountsList();
+            };
+
+            PropertyChanged += (sender, args) =>
             {
                 if (args.PropertyName == nameof(UpdateDelay))
                 {
-                    
+                    _updateDelay = UpdateDelay;
                 }
             };
+    
             _showClientOutput = ConsoleHelper.IsConsoleVisible();
-            // Start a timer to update process lifetimes
             Task.Run(UpdateProcessLifetimes);
+        }
+        
+        private void UpdateAccountsList()
+        {
+            Dispatcher.UIThread.InvokeAsync(() => {
+                // Clear existing accounts
+                _accountProcesses.Clear();
+            
+                // Add all current accounts
+                if (_viewModel.Accounts != null)
+                {
+                    foreach (var account in _viewModel.Accounts)
+                    {
+                        _accountProcesses.Add(new MassAccountLinkerModel() { Account = account });
+                    }
+                }
+            
+                // Ensure property change notification is triggered
+                OnPropertyChanged(nameof(AccountProcesses));
+            });
         }
         
         private void KillClient(MassAccountLinkerModel model)
