@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 using JagexAccountSwitcher.Model;
@@ -11,7 +14,30 @@ namespace JagexAccountSwitcher.ViewModels
     {
         private readonly UserSettings _userSettings;
         private readonly IStorageProvider _storageProvider;
+        
+        private double _downloadProgress;
+        public double DownloadProgress
+        {
+            get => _downloadProgress;
+            set
+            {
+                _downloadProgress = value;
+                this.RaisePropertyChanged(nameof(DownloadProgress));
+                this.RaisePropertyChanged(nameof(DownloadProgressText));
+            }
+        }
 
+        public string DownloadProgressText => $"{(int)(DownloadProgress * 100)}%";
+        private bool _isDownloading;
+        public bool IsDownloading
+        {
+            get => _isDownloading;
+            set
+            {
+                _isDownloading = value;
+                this.RaisePropertyChanged(nameof(IsDownloading));
+            }
+        }
         public string RunelitePath
         {
             get => _userSettings.RunelitePath;
@@ -129,5 +155,75 @@ namespace JagexAccountSwitcher.ViewModels
                 _userSettings.SaveToFile();
             }
         }
+        
+
+
+public async Task DownloadLatestMicrobotJar()
+{
+    try
+    {
+        var latestRelease = await GithubReleaseDownloader.ReleaseManager.Instance.GetWithTagAsync("chsami", "Microbot", "nightly");
+        if (latestRelease == null)
+        {
+            Console.WriteLine("Failed to get the latest release.");
+            return;
+        }
+        var asset = latestRelease.Assets.FirstOrDefault(x => x.Name.Contains("microbot-"));
+        if (asset == null)
+        {
+            Console.WriteLine("Failed to find the Microbot asset.");
+            return;
+        }
+        
+        IsDownloading = true;
+        DownloadProgress = 0;
+        string downloadPath = Path.Combine(Directory.GetCurrentDirectory(), asset.Name);
+
+        using (HttpClient client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Add("User-Agent", "JagexAccountSwitcher");
+
+            // Use streaming approach to track download progress
+            using (var response = await client.GetAsync(asset.DownloadUrl, HttpCompletionOption.ResponseHeadersRead))
+            {
+                response.EnsureSuccessStatusCode();
+                
+                long? totalBytes = response.Content.Headers.ContentLength;
+                using (var contentStream = await response.Content.ReadAsStreamAsync())
+                using (var fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write))
+                {
+                    var buffer = new byte[8192];
+                    long totalBytesRead = 0;
+                    int bytesRead;
+                    
+                    while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    {
+                        await fileStream.WriteAsync(buffer, 0, bytesRead);
+                        totalBytesRead += bytesRead;
+                        
+                        if (totalBytes.HasValue)
+                        {
+                            DownloadProgress = (double)totalBytesRead / totalBytes.Value;
+                        }
+                    }
+                }
+            }
+
+            // Update the path setting
+            MicroBotJarPath = downloadPath;
+            _userSettings.MicroBotJarPath = downloadPath;
+            _userSettings.SaveToFile();
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error downloading Microbot JAR: {ex.Message}");
+    }
+    finally
+    {
+        IsDownloading = false;
+        DownloadProgress = 1; // Complete the progress bar
+    }
+}
     }
 }

@@ -60,4 +60,9 @@ public partial class Settings : UserControl
     {
         await _viewModel.BrowseMicrobotJarPath();
     }
+    
+    private async void DownloadLatestMicrobotJar_Click(object? sender, RoutedEventArgs e)
+    {
+        await _viewModel.DownloadLatestMicrobotJar();
+    }
 }
