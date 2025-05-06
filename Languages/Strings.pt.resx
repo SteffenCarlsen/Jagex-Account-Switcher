@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+                xmlns="">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <!-- From Settings.axaml -->
+    <data name="SettingsTitle" xml:space="preserve">
+        <value>Configurações</value>
+    </data>
+    <data name="RuneliteLocation" xml:space="preserve">
+        <value>Localização do RuneLite</value>
+    </data>
+    <data name="ConfigurationsLocation" xml:space="preserve">
+        <value>Localização das Configurações</value>
+    </data>
+    <data name="ConfigurationsPathWatermark" xml:space="preserve">
+        <value>Caminho das configurações</value>
+    </data>
+    <data name="RunelitePathWatermark" xml:space="preserve">
+        <value>Caminho do executável RuneLite</value>
+    </data>
+    <data name="BrowseButton" xml:space="preserve">
+        <value>Procurar</value>
+    </data>
+    <data name="MicrobotJarLocation" xml:space="preserve">
+        <value>Localização do JAR do Microbot</value>
+    </data>
+    <data name="MicrobotJarPathWatermark" xml:space="preserve">
+        <value>Caminho do arquivo JAR do Microbot</value>
+    </data>
+    <data name="Language" xml:space="preserve">
+        <value>Idioma</value>
+    </data>
+    <!-- From MassAccountHandler.axaml -->
+    <data name="Account" xml:space="preserve">
+    <value>Conta</value>
+</data>
+    <data name="ProcessID" xml:space="preserve">
+    <value>ID do Processo</value>
+</data>
+    <data name="ProcessLifetime" xml:space="preserve">
+    <value>Tempo de Vida do Processo</value>
+</data>
+    <data name="Actions" xml:space="preserve">
+    <value>Ações</value>
+</data>
+    <data name="Start" xml:space="preserve">
+    <value>Iniciar</value>
+</data>
+    <data name="Kill" xml:space="preserve">
+    <value>Encerrar</value>
+</data>
+    <data name="UpdateDelayMs" xml:space="preserve">
+    <value>Atraso de Atualização (ms):</value>
+</data>
+    <data name="StartAll" xml:space="preserve">
+    <value>Iniciar Todos</value>
+</data>
+    <data name="MassStartTooltip" xml:space="preserve">
+    <value>Iniciar todas as contas com um atraso entre cada uma</value>
+</data>
+    <data name="ShowDebugConsole" xml:space="preserve">
+    <value>Mostrar Console de Depuração</value>
+</data>
+
+    <!-- From LandingPage.axaml -->
+    <data name="WelcomeMessage" xml:space="preserve">
+    <value>Bem-vindo ao Alternador de Contas Jagex</value>
+</data>
+
+    <!-- From AccountOverview.axaml -->
+    <data name="AccountName" xml:space="preserve">
+    <value>Nome da Conta</value>
+</data>
+    <data name="Active" xml:space="preserve">
+    <value>Ativa</value>
+</data>
+    <data name="HasClientArguments" xml:space="preserve">
+    <value>Tem Argumentos de Cliente</value>
+</data>
+    <data name="SwitchToAccount" xml:space="preserve">
+    <value>Mudar para Conta</value>
+</data>
+    <data name="SetClientArguments" xml:space="preserve">
+    <value>Definir Argumentos de Cliente</value>
+</data>
+    <data name="ImportAccount" xml:space="preserve">
+    <value>Importar Conta</value>
+</data>
+    <data name="RefreshActiveAccount" xml:space="preserve">
+    <value>Atualizar Conta Ativa</value>
+</data>
+    <data name="Delete" xml:space="preserve">
+    <value>Excluir</value>
+</data>
+
+    <!-- From Guide.axaml -->
+    <data name="SetupGuide" xml:space="preserve">
+    <value>Guia de Configuração</value>
+</data>
+    <data name="Step1Title" xml:space="preserve">
+    <value>Primeiros Passos</value>
+</data>
+    <data name="Step1Description" xml:space="preserve">
+    <value>Siga estes passos para configurar seu alternador de contas:</value>
+</data>
+    <data name="Step1Point1" xml:space="preserve">
+    <value>Defina o caminho do RuneLite na aba Configurações</value>
+</data>
+    <data name="Step1Point2" xml:space="preserve">
+    <value>Defina o caminho de Configurações onde seus perfis serão armazenados</value>
+</data>
+    <data name="Step1Point3" xml:space="preserve">
+    <value>Importe sua primeira conta na aba Contas</value>
+</data>
+    <data name="Step1Point4" xml:space="preserve">
+    <value>Use o botão "Mudar para Conta" para ativar uma conta</value>
+</data>
+    <data name="Step2Title" xml:space="preserve">
+    <value>Recursos Avançados</value>
+</data>
+    <data name="Step2Description" xml:space="preserve">
+    <value>Depois de se familiarizar com o básico, você pode:</value>
+</data>
+    <data name="Step2Point1" xml:space="preserve">
+    <value>Definir argumentos de cliente personalizados para cada conta</value>
+</data>
+    <data name="Step2Point2" xml:space="preserve">
+    <value>Usar o Gerenciador de Contas em Massa para iniciar vários clientes</value>
+</data>
+    <data name="Step2Point3" xml:space="preserve">
+    <value>Importar o Microbot para tarefas automatizadas</value>
+</data>
+    <data name="Step2Point4" xml:space="preserve">
+    <value>Personalizar o idioma da aplicação</value>
+</data>
+    <data name="WarningMessage" xml:space="preserve">
+    <value>Aviso: Certifique-se de manter as informações da sua conta seguras. Esta aplicação armazena dados apenas localmente no seu dispositivo.</value>
+</data>
+
+    <!-- From ClientArgumentsDialog.axaml -->
+    <data name="SetClientArgumentsBuilder" xml:space="preserve">
+    <value>Construtor de Argumentos de Cliente</value>
+</data>
+    <data name="ClientOptions" xml:space="preserve">
+    <value>Opções do Cliente</value>
+</data>
+    <data name="CleanJagexLauncher" xml:space="preserve">
+    <value>Limpar Launcher da Jagex</value>
+</data>
+    <data name="CleanJagexLauncherDescription" xml:space="preserve">
+    <value>Remover integração com o launcher da Jagex</value>
+</data>
+    <data name="DeveloperMode" xml:space="preserve">
+    <value>Modo Desenvolvedor</value>
+</data>
+    <data name="DeveloperModeDescription" xml:space="preserve">
+    <value>Ativar ferramentas e registro para desenvolvedores</value>
+</data>
+    <data name="DebugMode" xml:space="preserve">
+    <value>Modo de Depuração</value>
+</data>
+    <data name="DebugModeDescription" xml:space="preserve">
+    <value>Ativar opções adicionais de depuração</value>
+</data>
+    <data name="MicrobotDebug" xml:space="preserve">
+    <value>Depuração do Microbot</value>
+</data>
+    <data name="MicrobotDebugDescription" xml:space="preserve">
+    <value>Ativar recursos de depuração do Microbot</value>
+</data>
+    <data name="SafeMode" xml:space="preserve">
+    <value>Modo Seguro</value>
+</data>
+    <data name="SafeModeDescription" xml:space="preserve">
+    <value>Desativar plugins externos</value>
+</data>
+    <data name="InsecureSkipTls" xml:space="preserve">
+    <value>Ignorar TLS Inseguro</value>
+</data>
+    <data name="InsecureSkipTlsDescription" xml:space="preserve">
+    <value>Ignorar validação de certificados TLS (não recomendado)</value>
+</data>
+    <data name="DisableTelemetry" xml:space="preserve">
+    <value>Desativar Telemetria</value>
+</data>
+    <data name="DisableTelemetryDescription" xml:space="preserve">
+    <value>Evitar envio de estatísticas de uso</value>
+</data>
+    <data name="DisableWalkerUpdate" xml:space="preserve">
+    <value>Desativar Atualização do Walker</value>
+</data>
+    <data name="DisableWalkerUpdateDescription" xml:space="preserve">
+    <value>Evitar atualizações automáticas do componente walker</value>
+</data>
+    <data name="NoUpdate" xml:space="preserve">
+    <value>Sem Atualização</value>
+</data>
+    <data name="NoUpdateDescription" xml:space="preserve">
+    <value>Pular verificação de atualizações do RuneLite</value>
+</data>
+    <data name="OptionsWithValues" xml:space="preserve">
+    <value>Opções Com Valores</value>
+</data>
+    <data name="JavConfigUrl" xml:space="preserve">
+    <value>URL do JavConfig</value>
+</data>
+    <data name="JavConfigUrlWatermark" xml:space="preserve">
+    <value>Digite URL para JavConfig</value>
+</data>
+    <data name="Profile" xml:space="preserve">
+    <value>Perfil</value>
+</data>
+    <data name="ProfileWatermark" xml:space="preserve">
+    <value>Digite o nome do perfil</value>
+</data>
+    <data name="ProxyType" xml:space="preserve">
+    <value>Tipo de Proxy</value>
+</data>
+    <data name="None" xml:space="preserve">
+    <value>Nenhum</value>
+</data>
+    <data name="HTTP" xml:space="preserve">
+    <value>HTTP</value>
+</data>
+    <data name="SOCKS" xml:space="preserve">
+    <value>SOCKS</value>
+</data>
+    <data name="ProxyHost" xml:space="preserve">
+    <value>Host do Proxy</value>
+</data>
+    <data name="ProxyHostWatermark" xml:space="preserve">
+    <value>Digite o endereço do host</value>
+</data>
+    <data name="ProxyPort" xml:space="preserve">
+    <value>Porta do Proxy</value>
+</data>
+    <data name="ProxyPortWatermark" xml:space="preserve">
+    <value>Digite o número da porta</value>
+</data>
+    <data name="ProxyUsername" xml:space="preserve">
+    <value>Usuário do Proxy</value>
+</data>
+    <data name="ProxyUsernameWatermark" xml:space="preserve">
+    <value>Digite o nome de usuário</value>
+</data>
+    <data name="ProxyPassword" xml:space="preserve">
+    <value>Senha do Proxy</value>
+</data>
+    <data name="ProxyPasswordWatermark" xml:space="preserve">
+    <value>Digite a senha</value>
+</data>
+    <data name="RawArguments" xml:space="preserve">
+    <value>Argumentos Brutos</value>
+</data>
+    <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+</data>
+    <data name="OK" xml:space="preserve">
+    <value>OK</value>
+</data>
+    <data name="WindowTitle" xml:space="preserve">
+    <value>Alternador de Contas Jagex</value>
+</data>
+    <data name="Navigation" xml:space="preserve">
+    <value>Navegação</value>
+</data>
+    <data name="AccountOverview" xml:space="preserve">
+    <value>Visão Geral das Contas</value>
+</data>
+    <data name="AccountHandler" xml:space="preserve">
+    <value>Gerenciador de Contas</value>
+</data>
+    <data name="Settings" xml:space="preserve">
+    <value>Configurações</value>
+</data>
+    <data name="Guide" xml:space="preserve">
+    <value>Guia</value>
+</data>
+</root>

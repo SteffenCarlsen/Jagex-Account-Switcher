@@ -2,13 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:l="clr-namespace:Jeek.Avalonia.Localization;assembly=Jeek.Avalonia.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="JagexAccountSwitcher.Views.Guide">
     
     <ScrollViewer>
         <StackPanel Margin="20">
             <!-- Title -->
-            <TextBlock Text="Setup Guide" 
+            <TextBlock Text="{l:Localize SetupGuide}" 
                        FontSize="24" 
                        FontWeight="Bold" 
                        Margin="0,0,0,15"
@@ -17,31 +18,30 @@
             <!-- First Section -->
             <Border BorderBrush="#333333" BorderThickness="0,0,0,1" Padding="0,0,0,10" Margin="0,0,0,15">
                 <StackPanel>
-                    <TextBlock Text="Step 1: Enable Insecure Jagex Account Credential Storage" 
+                    <TextBlock Text="{l:Localize Step1Title}" 
                                FontSize="18" 
                                FontWeight="Bold" 
                                Margin="0,0,0,10"/>
                     
-                    <TextBlock TextWrapping="Wrap" 
-                               Margin="0,0,0,10">
-                        Follow these steps to enable insecure Jagex account credential storage:
-                    </TextBlock>
+                    <TextBlock Text="{l:Localize Step1Description}" 
+                               TextWrapping="Wrap" 
+                               Margin="0,0,0,10"/>
                     
                     <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*" Margin="10,0,0,10">
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="1." FontWeight="Bold" Margin="0,0,10,5"/>
-                        <TextBlock Grid.Row="0" Grid.Column="1" Text="For Windows, run RuneLite (configure) from the start menu. Otherwise, pass --configure to the launcher (i.e. /Applications/RuneLite.app/Contents/MacOS/RuneLite --configure on Mac)." 
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{l:Localize Step1Point1}" 
                                    TextWrapping="Wrap" Margin="0,0,0,5"/>
                         
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="2." FontWeight="Bold" Margin="0,0,10,5"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" Text="In the Client arguments input box add --insecure-write-credentials" 
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{l:Localize Step1Point2}" 
                                    TextWrapping="Wrap" Margin="0,0,0,5"/>
                         
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="3." FontWeight="Bold" Margin="0,0,10,5"/>
-                        <TextBlock Grid.Row="2" Grid.Column="1" Text="Click Save" 
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{l:Localize Step1Point3}" 
                                    TextWrapping="Wrap" Margin="0,0,0,5"/>
                         
                         <TextBlock Grid.Row="3" Grid.Column="0" Text="4." FontWeight="Bold" Margin="0,0,10,5"/>
-                        <TextBlock Grid.Row="3" Grid.Column="1" Text="Launch RuneLite via the Jagex launcher. RuneLite will write your launcher credentials to .runelite/credentials.properties. These credentials can be used to login into your account directly, bypassing your password. Do not share this file with anyone." 
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{l:Localize Step1Point4}" 
                                    TextWrapping="Wrap" Margin="0,0,0,5"/>
                     </Grid>
                 </StackPanel>
@@ -49,38 +49,37 @@
             
             <!-- Second Section -->
             <StackPanel>
-                <TextBlock Text="Step 2: Import Your Accounts" 
+                <TextBlock Text="{l:Localize Step2Title}" 
                            FontSize="18" 
                            FontWeight="Bold" 
                            Margin="0,0,0,10"/>
                 
-                <TextBlock TextWrapping="Wrap" 
-                           Margin="0,0,0,10">
-                    Repeat the following steps for each account you want to add:
-                </TextBlock>
+                <TextBlock Text="{l:Localize Step2Description}" 
+                           TextWrapping="Wrap" 
+                           Margin="0,0,0,10"/>
                 
                 <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,*" Margin="10,0,0,10">
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="1." FontWeight="Bold" Margin="0,0,10,5"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Login to your account manually once" 
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{l:Localize Step2Point1}" 
                                TextWrapping="Wrap" Margin="0,0,0,5"/>
                     
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="2." FontWeight="Bold" Margin="0,0,10,5"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="Click &quot;Import account&quot; in the Account Overview panel" 
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{l:Localize Step2Point2}" 
                                TextWrapping="Wrap" Margin="0,0,0,5"/>
                     
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="3." FontWeight="Bold" Margin="0,0,10,5"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="Continue till all accounts are imported" 
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{l:Localize Step2Point3}" 
                                TextWrapping="Wrap" Margin="0,0,0,5"/>
                     
                     <TextBlock Grid.Row="3" Grid.Column="0" Text="4." FontWeight="Bold" Margin="0,0,10,5"/>
-                    <TextBlock Grid.Row="3" Grid.Column="1" Text="When all accounts are imported, you can switch the currently active account" 
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{l:Localize Step2Point4}" 
                                TextWrapping="Wrap" Margin="0,0,0,5"/>
                 </Grid>
             </StackPanel>
             
             <!-- Warning Box -->
             <Border Background="#FFF4DD" BorderBrush="#FFD700" BorderThickness="1" CornerRadius="4" Padding="10" Margin="0,15,0,0">
-                <TextBlock Text="⚠️ Warning: Your account credentials are stored in an insecure manner. Never share your credentials.properties file with anyone." 
+                <TextBlock Text="{l:Localize WarningMessage}" 
                            TextWrapping="Wrap" 
                            Foreground="#CC6600"/>
             </Border>

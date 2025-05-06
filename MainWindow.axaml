@@ -4,10 +4,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         x:Class="JagexAccountSwitcher.MainWindow"
         xmlns:viewModels="clr-namespace:JagexAccountSwitcher.ViewModels"
+        xmlns:l="clr-namespace:Jeek.Avalonia.Localization;assembly=Jeek.Avalonia.Localization"
         mc:Ignorable="d" d:DesignWidth="630" d:DesignHeight="375"
         x:DataType="viewModels:MainWindowViewModel"
         Icon="/Assets/icons8-intelligence-64.ico"
-        Title="Jagex Account Switcher"
+        Title="{l:Localize WindowTitle}"
         MinWidth="435"
         MinHeight="250"
         Width="750"
@@ -30,7 +31,7 @@
         <Grid Grid.Row="0" Background="Black" PointerPressed="TitleBar_PointerPressed">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0">
                 <Image Source="/Assets/icons8-intelligence-64.ico" Width="16" Height="16" Margin="0,0,2,0" VerticalAlignment="Center"/>
-                <TextBlock Text="Jagex Account Switcher" VerticalAlignment="Center" />
+                <TextBlock Text="{l:Localize WindowTitle}" VerticalAlignment="Center" />
             </StackPanel>
         </Grid>
 
@@ -44,18 +45,18 @@
             <!-- Navigation Pane -->
             <Border Grid.Column="0" BorderBrush="DarkGray" BorderThickness="1">
                 <StackPanel Background="Black" HorizontalAlignment="Stretch">
-                    <TextBlock Text="Navigation" FontWeight="Bold" Margin="10" TextAlignment="Center"
+                    <TextBlock Text="{l:Localize Navigation}" FontWeight="Bold" Margin="10" TextAlignment="Center"
                                TextDecorations="Underline" />
-                    <Button Content="Account Overview" Margin="8" HorizontalAlignment="Stretch"
+                    <Button Content="{l:Localize AccountOverview}" Margin="8" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
                             CommandParameter="AccountOverview" />
-                    <Button Content="Account Handler" Margin="8" HorizontalAlignment="Stretch"
+                    <Button Content="{l:Localize AccountHandler}" Margin="8" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
                             CommandParameter="MassAccountHandler" />
-                    <Button Content="Settings" Margin="8" HorizontalAlignment="Stretch"
+                    <Button Content="{l:Localize Settings}" Margin="8" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
                             CommandParameter="Settings" />
-                    <Button Content="Guide" Margin="8" HorizontalAlignment="Stretch"
+                    <Button Content="{l:Localize Guide}" Margin="8" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
                             CommandParameter="Guide" />
                 </StackPanel>

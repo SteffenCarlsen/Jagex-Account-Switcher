@@ -18,7 +18,8 @@ class Program
         }
         catch (Exception ex)
         {
-            File.WriteAllText("error.log", ex.ToString());
+            using StreamWriter sw = File.AppendText("error.log");
+            sw.WriteLine(ex.ToString());
             throw;
         }
     }

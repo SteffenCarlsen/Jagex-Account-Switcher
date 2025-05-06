@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:JagexAccountSwitcher.ViewModels"
              xmlns:model="using:JagexAccountSwitcher.Model"
+             xmlns:l="clr-namespace:Jeek.Avalonia.Localization;assembly=Jeek.Avalonia.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="JagexAccountSwitcher.Views.MassAccountHandler"
              x:DataType="vm:MassAccountHandlerViewModel"
@@ -13,10 +14,10 @@
     <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" Margin="10">
         <!-- Header for ListBox columns -->
         <Grid Grid.Row="1" ColumnDefinitions="150,120,*,Auto,Auto" Margin="10,0,10,5">
-            <TextBlock Grid.Column="0" Text="Account" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Column="1" Text="Process ID" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Column="2" Text="Process lifetime" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Column="3" Text="Actions" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+            <TextBlock Grid.Column="0" Text="{l:Localize Account}" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Text="{l:Localize ProcessID}" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="2" Text="{l:Localize ProcessLifetime}" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="3" Text="{l:Localize Actions}" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
         </Grid>
 
         <ListBox Grid.Row="2" ItemsSource="{Binding AccountProcesses}" Margin="0,0,0,10">
@@ -36,14 +37,14 @@
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"/>
                         <Button Grid.Column="3"
-                                Content="Start"
+                                Content="{l:Localize Start}"
                                 Command="{Binding DataContext.StartClientCommand, ElementName=MassAccountHandlerView}"
                                 CommandParameter="{Binding}"
                                 IsVisible="{Binding Process, Converter={x:Static ObjectConverters.IsNull}}"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"/>
                         <Button Grid.Column="4"
-                                Content="Kill"
+                                Content="{l:Localize Kill}"
                                 Command="{Binding DataContext.KillClientCommand, ElementName=MassAccountHandlerView}"
                                 CommandParameter="{Binding}"
                                 IsVisible="{Binding Process, Converter={x:Static ObjectConverters.IsNotNull}}"
@@ -55,13 +56,13 @@
         </ListBox>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBlock Text="Update Delay (ms):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBlock Text="{l:Localize UpdateDelayMs}" VerticalAlignment="Center" Margin="0,0,10,0"/>
             <NumericUpDown Minimum="500" Maximum="5000" Value="{Binding UpdateDelay}"
                            Increment="100" Width="150"/>
         </StackPanel>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Left">
-            <Button Content="Start All" Command="{Binding StartAllCommand}" Padding="20,10"/>
+            <Button Content="{l:Localize StartAll}" Command="{Binding StartAllCommand}" Padding="20,10"/>
             <TextBlock Text="[?]"
                        Margin="1,0,0,0"
                        VerticalAlignment="Top"
@@ -69,8 +70,8 @@
                        Background="Transparent"
                        Cursor="Help"
                        FontSize="15"
-                       ToolTip.Tip="Be aware that mass starting accounts means that all MicroBot instances are children of this program. Closing down this program will closed all instances."/>
-            <CheckBox Content="Show debug console" 
+                       ToolTip.Tip="{l:Localize MassStartTooltip}"/>
+            <CheckBox Content="{l:Localize ShowDebugConsole}" 
                       IsChecked="{Binding ShowClientOutput}"
                       Margin="15,0,0,0"
                       VerticalAlignment="Center"/>

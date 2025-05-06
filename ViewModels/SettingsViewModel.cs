@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 using JagexAccountSwitcher.Model;
+using Jeek.Avalonia.Localization;
 using ReactiveUI;
 
 namespace JagexAccountSwitcher.ViewModels
@@ -77,10 +80,36 @@ namespace JagexAccountSwitcher.ViewModels
             }
         }
 
+        public static ObservableCollection<string> DisplayLanguages =>
+        [
+            "English",
+            "Spanish",
+            "Portuguese"
+        ];
+
+        private String _selectedLanguage;
+        public String SelectedLanguage
+        {
+            get => _selectedLanguage;
+            set
+            {
+                var culture = value switch
+                {
+                    "Spanish" => "es",
+                    "Portuguese" => "pt",
+                    _ => "en"
+                };
+                _selectedLanguage = value;
+                _userSettings.SelectedLanguage = value;
+                _userSettings.SaveToFile();
+                Localizer.Language = culture;
+            }
+        }
         public SettingsViewModel(IStorageProvider storageProvider, UserSettings userSettings)
         {
             _storageProvider = storageProvider;
             _userSettings = userSettings;
+            _selectedLanguage = userSettings.SelectedLanguage;
             
             // Subscribe to property changes from UserSettings
             _userSettings.PropertyChanged += UserSettings_PropertyChanged;

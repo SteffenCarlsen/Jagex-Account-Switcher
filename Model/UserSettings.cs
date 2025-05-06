@@ -8,10 +8,19 @@ namespace JagexAccountSwitcher.Model;
 
 public class UserSettings : INotifyPropertyChanged
 {
+    private string _selectedLanguage;
     public string RunelitePath { get; set; } = RuneliteHelper.GetRunelitePath();
     public string ConfigurationsPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Configurations");
     public string MicroBotJarPath { get; set; } = string.Empty;
-
+    public string SelectedLanguage
+    {
+        get => _selectedLanguage;
+        set
+        {
+            _selectedLanguage = value;
+            OnPropertyChanged(nameof(_selectedLanguage));
+        }
+    }
     public void SaveToFile()
     {
         var json = JsonSerializer.Serialize(this, AppJsonContext.Default.UserSettings);
@@ -30,6 +39,7 @@ public class UserSettings : INotifyPropertyChanged
                 RunelitePath = config.RunelitePath;
                 ConfigurationsPath = config.ConfigurationsPath;
                 MicroBotJarPath = config.MicroBotJarPath;
+                SelectedLanguage = config.SelectedLanguage;
             }
         }
     }

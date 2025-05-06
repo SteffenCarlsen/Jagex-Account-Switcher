@@ -5,6 +5,7 @@
              xmlns:vm="using:JagexAccountSwitcher.ViewModels"
              xmlns:model="using:JagexAccountSwitcher.Model"
              xmlns:converters="clr-namespace:JagexAccountSwitcher.Converters"
+             xmlns:l="clr-namespace:Jeek.Avalonia.Localization;assembly=Jeek.Avalonia.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="JagexAccountSwitcher.Views.AccountOverview"
              x:CompileBindings="False"
@@ -18,9 +19,9 @@
     <Grid RowDefinitions="Auto,Auto,*,Auto">
         <!-- Header row -->
         <Grid Grid.Row="1" ColumnDefinitions="150,120,*" Margin="10,5,10,0">
-            <TextBlock Grid.Column="0" Text="Account Name" FontWeight="Bold" Margin="5" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Column="1" Text="Active" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Left" Margin="5"/>
-            <TextBlock Grid.Column="2" Text="Has Client arguments" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock Grid.Column="0" Text="{l:Localize AccountName}" FontWeight="Bold" Margin="5" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1" Text="{l:Localize Active}" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Left" Margin="5"/>
+            <TextBlock Grid.Column="2" Text="{l:Localize HasClientArguments}" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Center" Margin="5"/>
         </Grid>
 
         <ListBox Grid.Row="2" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" Margin="10,0,10,10">
@@ -29,10 +30,10 @@
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu>
-                                <MenuItem Header="Switch to account"
+                                <MenuItem Header="{l:Localize SwitchToAccount}"
                                           Command="{Binding DataContext.SwitchToAccountCommand, ElementName=AccountOverviewControl}"
                                           CommandParameter="{Binding}"/>
-                                <MenuItem Header="Set Client Arguments"
+                                <MenuItem Header="{l:Localize SetClientArguments}"
                                           Command="{Binding DataContext.SetClientArgumentsCommand, ElementName=AccountOverviewControl}"
                                           CommandParameter="{Binding}"/>
                             </ContextMenu>
@@ -72,10 +73,10 @@
     </ListBox.ItemTemplate>
 </ListBox>
         <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="10" HorizontalAlignment="Right">
-            <Button Content="Import account" Command="{Binding AddAccountCommand}" Margin="5"/>
-            <Button Content="Refresh active account" Command="{Binding RefreshAccountsCommand}" Margin="5"/>
-            <Button Content="Delete" Command="{Binding DeleteAccountCommand}" Margin="5"/>
-            <Button Content="Switch to account" Command="{Binding SwitchToAccountCommand}" Margin="5"/>
+            <Button Content="{l:Localize ImportAccount}" Command="{Binding AddAccountCommand}" Margin="5"/>
+            <Button Content="{l:Localize RefreshActiveAccount}" Command="{Binding RefreshAccountsCommand}" Margin="5"/>
+            <Button Content="{l:Localize Delete}" Command="{Binding DeleteAccountCommand}" Margin="5"/>
+            <Button Content="{l:Localize SwitchToAccount}" Command="{Binding SwitchToAccountCommand}" Margin="5"/>
         </StackPanel>
     </Grid>
 </UserControl>

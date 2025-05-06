@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:JagexAccountSwitcher.ViewModels"
              xmlns:converters="clr-namespace:JagexAccountSwitcher.Converters"
+             xmlns:l="clr-namespace:Jeek.Avalonia.Localization;assembly=Jeek.Avalonia.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="JagexAccountSwitcher.Views.Settings"
              x:DataType="vm:SettingsViewModel">
@@ -11,53 +12,53 @@
     <ScrollViewer>
         <StackPanel Margin="20">
             <!-- Title -->
-            <TextBlock Text="Settings" 
-                       FontSize="24" 
-                       FontWeight="Bold" 
+            <TextBlock Text="{l:Localize SettingsTitle}"
+                       FontSize="24"
+                       FontWeight="Bold"
                        Margin="0,0,0,15"
                        HorizontalAlignment="Center"/>
 
             <!-- RuneLite Path Section -->
-            <TextBlock Text="RuneLite Location" 
-                       FontWeight="SemiBold" 
+            <TextBlock Text="{l:Localize RuneliteLocation}"
+                       FontWeight="SemiBold"
                        Margin="0,0,0,5"/>
             <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,15">
-                <TextBox Grid.Column="0" 
-                         Text="{Binding RunelitePath}" 
-                         Watermark="Path to RuneLite executable"
+                <TextBox Grid.Column="0"
+                         Text="{Binding RunelitePath}"
+                         Watermark="{l:Localize RunelitePathWatermark}"
                          IsReadOnly="True"/>
-                <Button Grid.Column="1" 
-                        Content="Browse" 
+                <Button Grid.Column="1"
+                        Content="{l:Localize BrowseButton}"
                         Click="BrowseRunelitePath_Click"
                         Margin="5,0,0,0"/>
             </Grid>
 
             <!-- Configurations Path Section -->
-            <TextBlock Text="Configurations Location" 
-                       FontWeight="SemiBold" 
+            <TextBlock Text="{l:Localize ConfigurationsLocation}"
+                       FontWeight="SemiBold"
                        Margin="0,0,0,5"/>
             <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,15">
-                <TextBox Grid.Column="0" 
-                         Text="{Binding ConfigurationsPath}" 
-                         Watermark="Path to store configurations"
+                <TextBox Grid.Column="0"
+                         Text="{Binding ConfigurationsPath}"
+                         Watermark="{l:Localize ConfigurationsPathWatermark}"
                          IsReadOnly="True"/>
-                <Button Grid.Column="1" 
-                        Content="Browse" 
+                <Button Grid.Column="1"
+                        Content="{l:Localize BrowseButton}"
                         Click="BrowseConfigurationsPath_Click"
                         Margin="5,0,0,0"/>
             </Grid>
-            
+
             <!-- Microbot Jar Path Section -->
-            <TextBlock Text="Microbot Jar Location"
+            <TextBlock Text="{l:Localize MicrobotJarLocation}"
                        FontWeight="SemiBold"
                        Margin="0,0,0,5"/>
             <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,5">
                 <TextBox Grid.Column="0"
                          Text="{Binding MicroBotJarPath}"
-                         Watermark="Path to the Microbot Jar file"
+                         Watermark="{l:Localize MicrobotJarPathWatermark}"
                          IsReadOnly="True"/>
                 <Button Grid.Column="1"
-                        Content="Browse"
+                        Content="{l:Localize BrowseButton}"
                         Click="BrowseMicrobotJarPath_Click"
                         Margin="5,0,0,0"/>
                 <Button Grid.Column="2"
@@ -67,8 +68,8 @@
                         Margin="5,0,0,0"/>
             </Grid>
             <!-- Add Progress Bar -->
-            <Grid ColumnDefinitions="*,Auto" 
-                  Margin="0,0,0,15" 
+            <Grid ColumnDefinitions="*,Auto"
+                  Margin="0,0,0,15"
                   IsVisible="{Binding IsDownloading}">
                 <ProgressBar Grid.Column="0"
                              Value="{Binding DownloadProgress}"
@@ -80,6 +81,13 @@
                            VerticalAlignment="Center"
                            Margin="5,0,0,0"/>
             </Grid>
+            <!-- Language Selection -->
+            <TextBlock Text="{l:Localize Language}" FontWeight="SemiBold" Margin="0,10,0,5"/>
+            <ComboBox ItemsSource="{Binding DisplayLanguages}"
+                      SelectedItem="{Binding SelectedLanguage}"
+                      Margin="0,0,0,15"
+                      Width="200"
+                      HorizontalAlignment="Left"/>
         </StackPanel>
     </ScrollViewer>
 </UserControl>
