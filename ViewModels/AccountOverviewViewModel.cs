@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -24,7 +25,7 @@ namespace JagexAccountSwitcher.ViewModels
 {
     public class AccountOverviewViewModel : INotifyPropertyChanged
     {
-        
+
         private ObservableCollection<RunescapeAccount> _accounts;
         private RunescapeAccount _selectedAccount;
         private readonly UserSettings _userSettings;
@@ -73,10 +74,23 @@ namespace JagexAccountSwitcher.ViewModels
 
         private void AddAccount()
         {
-            var creditalsFile = new FileInfo(Path.Combine(_userSettings.RunelitePath, "credentials.properties"));
-            if (creditalsFile.Exists)
+            string userAccount = Environment.UserName;
+#if WINDOWS
+            var jagexLauncher = Process.GetProcessesByName("JagexLauncher").FirstOrDefault();
+            if (jagexLauncher != null)
             {
-                var accountName = CredentialsHelper.GetDisplayName(creditalsFile.FullName);
+                string owner = ProcessHelper.GetProcessOwner(jagexLauncher);
+                if (owner != null)
+                {
+                    userAccount = owner;
+                }
+            }
+            
+#endif
+            var credentialsFile = new FileInfo(Path.Combine(_userSettings.RunelitePath, "credentials.properties"));
+            if (credentialsFile.Exists)
+            {
+                var accountName = CredentialsHelper.GetDisplayName(credentialsFile.FullName);
                 if (Accounts.Any(a => a.AccountName.Equals(accountName, StringComparison.OrdinalIgnoreCase)))
                 {
                     MessageBoxManager.GetMessageBoxStandard("Error", $"{accountName} already exists", ButtonEnum.Ok, Icon.Error, WindowStartupLocation.CenterOwner).ShowAsync();
@@ -87,9 +101,10 @@ namespace JagexAccountSwitcher.ViewModels
                 {
                     AccountName = accountName,
                     FilePath = credentialsFilePath,
-                    IsActiveAccount = true
+                    IsActiveAccount = true,
+                    UserAccount = userAccount
                 };
-                creditalsFile.CopyTo(Path.Combine(_userSettings.ConfigurationsPath, $"credentials.properties.{accountName}"), true);
+                credentialsFile.CopyTo(Path.Combine(_userSettings.ConfigurationsPath, $"credentials.properties.{accountName}"), true);
                 foreach (var account in Accounts)
                 {
                     account.IsActiveAccount = false;

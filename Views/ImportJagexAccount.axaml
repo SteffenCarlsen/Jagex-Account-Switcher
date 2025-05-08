@@ -1,0 +1,80 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:JagexAccountSwitcher.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="JagexAccountSwitcher.Views.ImportJagexAccount"
+             x:CompileBindings="False"
+             x:DataType="vm:ImportJagexAccountViewModel"
+             d:DataContext="{d:DesignInstance Type=vm:ImportJagexAccountViewModel, IsDesignTimeCreatable=True}"
+             x:Name="ImportJagexAccountControl">
+
+    <Design.DataContext>
+        <vm:ImportJagexAccountViewModel/>
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Margin="20">
+            <!-- Title -->
+            <TextBlock Text="Import Jagex Account"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Margin="0,0,0,15"
+                       HorizontalAlignment="Center"/>
+
+            <!-- Windows Account List Section -->
+            <TextBlock Text="Available Windows Accounts"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,5"/>
+            <ListBox ItemsSource="{Binding WindowsAccounts}"
+                     SelectedItem="{Binding SelectedWindowsAccount}"
+                     MaxHeight="150"
+                     Margin="0,0,0,15"/>
+
+            <!-- New Windows Account Creation Section -->
+            <TextBlock Text="Create New Windows Account"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,5"/>
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" Margin="0,0,0,15">
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Account Name:" 
+                           VerticalAlignment="Center" 
+                           Margin="0,0,10,0"/>
+                <TextBox Grid.Column="1" Grid.Row="0" 
+                         Text="{Binding NewAccountName}" 
+                         Watermark="Enter new account name" 
+                         Margin="0,0,0,10"/>
+                <Button Grid.Column="1" Grid.Row="1" 
+                        Content="Create Windows Account"
+                        Command="{Binding CreateWindowsAccountCommand}"
+                        HorizontalAlignment="Right"/>
+                <Button Grid.Column="0" Grid.Row="1" 
+                        Content="Delete Windows Account"
+                        Command="{Binding DeleteWindowsAccountCommand}"
+                        HorizontalAlignment="Right"/>
+            </Grid>
+
+            <!-- Jagex Launcher Path Section -->
+            <TextBlock Text="Jagex Launcher Location"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,5"/>
+            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,15">
+                <TextBox Grid.Column="0"
+                         Text="{Binding JagexLauncherPath}"
+                         Watermark="Path to Jagex launcher"
+                         IsReadOnly="True"/>
+                <Button Grid.Column="1"
+                        Content="Browse"
+                        Command="{Binding BrowseJagexLauncherCommand}"
+                        Margin="5,0,0,0"/>
+            </Grid>
+
+            <!-- Launch Button -->
+            <Button Content="Launch Jagex Launcher as Selected User"
+                    Command="{Binding LaunchAsUserCommand}"
+                    HorizontalAlignment="Center"
+                    Padding="15,10"
+                    Margin="0,15,0,0"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

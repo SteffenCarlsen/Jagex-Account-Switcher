@@ -147,38 +147,16 @@ namespace JagexAccountSwitcher.ViewModels
     
             if (RuneliteHelper.SetActiveAccount(model.Account, _viewModel.Accounts, _settings.ConfigurationsPath, _settings.RunelitePath))
             {
-                var startInfo = new ProcessStartInfo
+                var arguments = $"-jar{(model.Account.ClientArguments != null && model.Account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {model.Account.ClientArguments}";
+                var process = ProcessHelper.LaunchProgramAsUser("javaw.exe", model.Account.UserAccount, "null", arguments, model.Account.AccountName);
+
+                if (process != null)
                 {
-                    FileName = "javaw.exe",
-                    Arguments = $"-jar{(model.Account.ClientArguments != null && model.Account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {model.Account.ClientArguments}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true
-                };
-        
-                var process = new Process { StartInfo = startInfo };
-        
-                // Set up output redirection
-                process.OutputDataReceived += (sender, args) => {
-                    if (!string.IsNullOrEmpty(args.Data) && ConsoleHelper.IsConsoleVisible())
-                        Console.WriteLine($"[{model.Account.AccountName}] {args.Data}");
-                };
-        
-                process.ErrorDataReceived += (sender, args) => {
-                    if (!string.IsNullOrEmpty(args.Data) && ConsoleHelper.IsConsoleVisible())
-                        Console.WriteLine($"[{model.Account.AccountName}] ERROR: {args.Data}");
-                };
-        
-                process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
-        
-                Dispatcher.UIThread.InvokeAsync(() => {
-                    model.Process = process;
-                    model.ProcessLifetime = $"Runtime: {DateTime.Now - process.StartTime:hh\\:mm\\:ss}";
-                });
-        
+                    Dispatcher.UIThread.InvokeAsync(() => {
+                        model.Process = process;
+                        model.ProcessLifetime = $"Runtime: {DateTime.Now - process.StartTime:hh\\:mm\\:ss}";
+                    });
+                }
                 RuneliteHelper.SaveAccounts(_viewModel.Accounts, _settings.ConfigurationsPath);
             }
         }

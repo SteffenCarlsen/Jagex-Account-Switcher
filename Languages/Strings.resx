@@ -298,4 +298,10 @@
     <data name="OK" xml:space="preserve">
     <value>OK</value>
 </data>
+    <data name="UserAccount" xml:space="preserve">
+        <value>UserAccount</value>
+    </data>
+    <data name="ImportJagexAccount" xml:space="preserve">
+        <value>Import Jagex Account</value>
+    </data>
 </root>

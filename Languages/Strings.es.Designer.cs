@@ -294,6 +294,15 @@ namespace JagexAccountSwitcher.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import Jagex Account.
+        /// </summary>
+        internal static string ImportJagexAccount {
+            get {
+                return ResourceManager.GetString("ImportJagexAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saltar TLS Inseguro.
         /// </summary>
         internal static string InsecureSkipTls {
@@ -821,6 +830,15 @@ namespace JagexAccountSwitcher.Languages {
         internal static string UpdateDelayMs {
             get {
                 return ResourceManager.GetString("UpdateDelayMs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserAccount.
+        /// </summary>
+        internal static string UserAccount {
+            get {
+                return ResourceManager.GetString("UserAccount", resourceCulture);
             }
         }
         

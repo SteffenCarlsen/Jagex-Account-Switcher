@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -18,6 +19,8 @@ namespace JagexAccountSwitcher.ViewModels
         public LandingPageViewModel LandingPageViewModel { get; set; }
         public SettingsViewModel SettingsViewModel { get; set; }
         public MassAccountHandlerViewModel MassAccountHandlerViewModel { get; set; }
+        public ImportJagexAccountViewModel ImportJagexAccountViewModel { get; set; }
+        public bool IsWindowsPlatform => OperatingSystem.IsWindows();
         public object CurrentView
         {
             get => _currentView;
@@ -39,6 +42,7 @@ namespace JagexAccountSwitcher.ViewModels
             LandingPageViewModel = new LandingPageViewModel();
             SettingsViewModel = new SettingsViewModel(window.StorageProvider, _settings);
             MassAccountHandlerViewModel = new MassAccountHandlerViewModel(AccountOverviewViewModel, _settings);
+            ImportJagexAccountViewModel = new ImportJagexAccountViewModel(_settings);
             ChangeViewCommand = new RelayCommand<string>(ChangeView);
             _viewInstances = new Dictionary<string, object>();
             ChangeView("LandingPage");
@@ -55,6 +59,7 @@ namespace JagexAccountSwitcher.ViewModels
                     "AccountOverview" => new AccountOverview(AccountOverviewViewModel),
                     "Settings" => new Settings(SettingsViewModel),
                     "MassAccountHandler" => new MassAccountHandler(MassAccountHandlerViewModel),
+                    "ImportJagexAccount" => new ImportJagexAccount(ImportJagexAccountViewModel),
                     _ => new LandingPage()
                 };
                 _viewInstances[viewName] = view;

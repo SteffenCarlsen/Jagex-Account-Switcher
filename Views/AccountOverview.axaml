@@ -18,10 +18,11 @@
     </UserControl.Resources>
     <Grid RowDefinitions="Auto,Auto,*,Auto">
         <!-- Header row -->
-        <Grid Grid.Row="1" ColumnDefinitions="150,120,*" Margin="10,5,10,0">
+        <Grid Grid.Row="1" ColumnDefinitions="150,50,175,*" Margin="10,5,10,0">
             <TextBlock Grid.Column="0" Text="{l:Localize AccountName}" FontWeight="Bold" Margin="5" HorizontalAlignment="Left"/>
             <TextBlock Grid.Column="1" Text="{l:Localize Active}" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Left" Margin="5"/>
             <TextBlock Grid.Column="2" Text="{l:Localize HasClientArguments}" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Center" Margin="5"/>
+            <TextBlock Grid.Column="3" Text="{l:Localize UserAccount}" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Center" Margin="5"/>
         </Grid>
 
         <ListBox Grid.Row="2" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" Margin="10,0,10,10">
@@ -43,7 +44,7 @@
             </ListBox.Styles>
     <ListBox.ItemTemplate>
         <DataTemplate x:DataType="model:RunescapeAccount">
-            <Grid ColumnDefinitions="150,120,*">
+            <Grid ColumnDefinitions="150,50,175,*">
                 <TextBlock Grid.Column="0" Text="{Binding AccountName}" Margin="5" HorizontalAlignment="Left"/>
 
                 <!-- Active status indicator -->
@@ -68,6 +69,7 @@
                                    IsVisible="{Binding HasClientArguments}"/>
                     </ToolTip.Tip>
                 </TextBlock>
+                <TextBlock Grid.Column="3" Text="{Binding UserAccount}" Margin="5" HorizontalAlignment="Center"/>
             </Grid>
         </DataTemplate>
     </ListBox.ItemTemplate>
