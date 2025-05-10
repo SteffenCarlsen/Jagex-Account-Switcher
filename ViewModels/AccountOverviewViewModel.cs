@@ -87,7 +87,9 @@ namespace JagexAccountSwitcher.ViewModels
             }
             
 #endif
-            var credentialsFile = new FileInfo(Path.Combine(_userSettings.RunelitePath, "credentials.properties"));
+            var currentJagexUserAccount = GetJaxexUserAccount();
+            var basePath = $@"C:\Users\{currentJagexUserAccount}\.runelite";
+            var credentialsFile = new FileInfo(Path.Combine(currentJagexUserAccount == null ? _userSettings.RunelitePath : basePath, "credentials.properties"));
             if (credentialsFile.Exists)
             {
                 var accountName = CredentialsHelper.GetDisplayName(credentialsFile.FullName);
@@ -134,7 +136,18 @@ namespace JagexAccountSwitcher.ViewModels
             }
             SaveAccounts();
         }
-        
+
+        private string? GetJaxexUserAccount()
+        {
+            var jagexLauncher = Process.GetProcessesByName("JagexLauncher").FirstOrDefault();
+            if (jagexLauncher != null)
+            {
+                return ProcessHelper.GetProcessOwner(jagexLauncher);
+            }
+
+            return null;
+        }
+
         private void SetActiveAccount()
         {
             if (RuneliteHelper.SetActiveAccount(SelectedAccount, Accounts, _userSettings.ConfigurationsPath, _userSettings.RunelitePath))
