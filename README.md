@@ -32,7 +32,10 @@ Thanks to slest for the guide.
 
 or
 
-`# Example Terminal command if needed: mv ~/Downloads/JagexAccountSwitcher.app /Applications/`
+**Example Terminal command if needed:**
+
+
+`mv ~/Downloads/JagexAccountSwitcher.app /Applications/`
 
 
 ####  Step 2: Fix macOS Security Permissions
@@ -47,3 +50,14 @@ or
 
 
 `cd /Applications/JagexAccountSwitcher.app/Contents/MacOS/ ./JagexAccountSwitcher`
+
+
+## Common issues
+- Make sure you have .NET installed.
+  - You can download it here: [.NET](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+- Make sure you have Java 17 installed and your `JAVA_HOME` environment variable is set correctly.
+  - You can download it here: [JDK](https://adoptium.net/en-GB/temurin/releases/?os=any&arch=any&package=jdk&version=17)
+- Make sure you have the correct permissions to run the program.
+  - You might need admin permissions to run the program. Especially if you want to kill clients.
+- Make sure you have the correct version of the program for your operating system.
+- Make sure you have the correct version of the program for your architecture (x64 or ARM64).
