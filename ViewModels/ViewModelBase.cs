@@ -1,6 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿#region
+
 using ReactiveUI;
+
+#endregion
 
 namespace JagexAccountSwitcher.ViewModels;
 
-public class ViewModelBase : ReactiveObject { }
+public class ViewModelBase : ReactiveObject
+{
+}

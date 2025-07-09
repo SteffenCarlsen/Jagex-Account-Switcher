@@ -1,24 +1,27 @@
-﻿using Avalonia;
+﻿#region
+
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Platform.Storage;
 using JagexAccountSwitcher.ViewModels;
+
+#endregion
 
 namespace JagexAccountSwitcher.Views;
 
 public partial class Settings : UserControl
 {
     private readonly SettingsViewModel _viewModel;
-    
+
     public Settings()
     {
         InitializeComponent();
-        
+
         // This will be initialized in OnAttachedToVisualTree
         _viewModel = null!;
     }
-    
+
     public Settings(SettingsViewModel settingsViewModel)
     {
         InitializeComponent();
@@ -30,11 +33,11 @@ public partial class Settings : UserControl
     {
         AvaloniaXamlLoader.Load(this);
     }
-    
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-        
+
         // Only initialize if not already done in constructor
         if (DataContext == null)
         {
@@ -45,12 +48,12 @@ public partial class Settings : UserControl
             }
         }
     }
-    
+
     private async void BrowseRunelitePath_Click(object sender, RoutedEventArgs e)
     {
         await _viewModel.BrowseRunelitePath();
     }
-    
+
     private async void BrowseConfigurationsPath_Click(object sender, RoutedEventArgs e)
     {
         await _viewModel.BrowseConfigurationsPath();
@@ -60,9 +63,14 @@ public partial class Settings : UserControl
     {
         await _viewModel.BrowseMicrobotJarPath();
     }
-    
+
     private async void DownloadLatestMicrobotJar_Click(object? sender, RoutedEventArgs e)
     {
         await _viewModel.DownloadLatestMicrobotJar();
+    }
+
+    private async void DeleteOldMicrobotJars_Click(object? sender, RoutedEventArgs e)
+    {
+        await _viewModel.DeleteOldMicrobotJars();
     }
 }

@@ -1,3 +1,5 @@
+#region
+
 using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -7,9 +9,11 @@ using JagexAccountSwitcher.Model;
 using JagexAccountSwitcher.ViewModels;
 using Jeek.Avalonia.Localization;
 
+#endregion
+
 namespace JagexAccountSwitcher;
 
-public partial class App : Application
+public class App : Application
 {
     public override void Initialize()
     {

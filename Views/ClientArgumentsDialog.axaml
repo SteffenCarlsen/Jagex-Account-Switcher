@@ -8,100 +8,111 @@
         x:CompileBindings="False">
     <Window.Styles>
         <Style Selector="CheckBox">
-            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Margin" Value="0,5,0,5" />
         </Style>
         <Style Selector="TextBlock.Header">
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Margin" Value="0,10,0,5"/>
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,10,0,5" />
         </Style>
         <Style Selector="StackPanel.Option">
-            <Setter Property="Margin" Value="0,3,0,3"/>
+            <Setter Property="Margin" Value="0,3,0,3" />
         </Style>
     </Window.Styles>
-    
+
     <Grid RowDefinitions="*,Auto">
         <ScrollViewer Grid.Row="0" Margin="10">
             <StackPanel>
-                <TextBlock Classes="Header" Text="{l:Localize ClientOptions}"/>
-                
-                <CheckBox x:Name="CleanJagexLauncherCheckBox" Content="{l:Localize CleanJagexLauncher}"/>
-                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12" Text="{l:Localize CleanJagexLauncherDescription}"/>
-                
-                <CheckBox x:Name="DeveloperModeCheckBox" Content="{l:Localize DeveloperMode}"/>
-                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12" Text="{l:Localize DeveloperModeDescription}"/>
-                
-                <CheckBox x:Name="DebugCheckBox" Content="{l:Localize DebugMode}"/>
-                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12" Text="{l:Localize DebugModeDescription}"/>
-                
-                <CheckBox x:Name="MicrobotDebugCheckBox" Content="{l:Localize MicrobotDebug}"/>
-                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12" Text="{l:Localize MicrobotDebugDescription}"/>
-                
-                <CheckBox x:Name="SafeModeCheckBox" Content="{l:Localize SafeMode}"/>
-                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12" Text="{l:Localize SafeModeDescription}"/>
-                
-                <CheckBox x:Name="InsecureSkipTlsCheckBox" Content="{l:Localize InsecureSkipTls}"/>
-                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12" Text="{l:Localize InsecureSkipTlsDescription}"/>
-                
-                <CheckBox x:Name="DisableTelemetryCheckBox" Content="{l:Localize DisableTelemetry}"/>
-                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12" Text="{l:Localize DisableTelemetryDescription}"/>
-                
-                <CheckBox x:Name="DisableWalkerUpdateCheckBox" Content="{l:Localize DisableWalkerUpdate}"/>
-                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12" Text="{l:Localize DisableWalkerUpdateDescription}"/>
-                
-                <CheckBox x:Name="NoUpdateCheckBox" Content="{l:Localize NoUpdate}"/>
-                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12" Text="{l:Localize NoUpdateDescription}"/>
-                
-                <TextBlock Classes="Header" Text="{l:Localize OptionsWithValues}"/>
-                
+                <TextBlock Classes="Header" Text="{l:Localize ClientOptions}" />
+
+                <CheckBox x:Name="CleanJagexLauncherCheckBox" Content="{l:Localize CleanJagexLauncher}" />
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12"
+                           Text="{l:Localize CleanJagexLauncherDescription}" />
+
+                <CheckBox x:Name="DeveloperModeCheckBox" Content="{l:Localize DeveloperMode}" />
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12"
+                           Text="{l:Localize DeveloperModeDescription}" />
+
+                <CheckBox x:Name="DebugCheckBox" Content="{l:Localize DebugMode}" />
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12"
+                           Text="{l:Localize DebugModeDescription}" />
+
+                <CheckBox x:Name="MicrobotDebugCheckBox" Content="{l:Localize MicrobotDebug}" />
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12"
+                           Text="{l:Localize MicrobotDebugDescription}" />
+
+                <CheckBox x:Name="SafeModeCheckBox" Content="{l:Localize SafeMode}" />
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12"
+                           Text="{l:Localize SafeModeDescription}" />
+
+                <CheckBox x:Name="InsecureSkipTlsCheckBox" Content="{l:Localize InsecureSkipTls}" />
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12"
+                           Text="{l:Localize InsecureSkipTlsDescription}" />
+
+                <CheckBox x:Name="DisableTelemetryCheckBox" Content="{l:Localize DisableTelemetry}" />
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12"
+                           Text="{l:Localize DisableTelemetryDescription}" />
+
+                <CheckBox x:Name="DisableWalkerUpdateCheckBox" Content="{l:Localize DisableWalkerUpdate}" />
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12"
+                           Text="{l:Localize DisableWalkerUpdateDescription}" />
+
+                <CheckBox x:Name="NoUpdateCheckBox" Content="{l:Localize NoUpdate}" />
+                <TextBlock Margin="24,0,0,5" TextWrapping="Wrap" Opacity="0.7" FontSize="12"
+                           Text="{l:Localize NoUpdateDescription}" />
+
+                <TextBlock Classes="Header" Text="{l:Localize OptionsWithValues}" />
+
                 <StackPanel Classes="Option">
-                    <TextBlock Text="{l:Localize JavConfigUrl}"/>
-                    <TextBox x:Name="JavConfigTextBox" Watermark="{l:Localize JavConfigUrlWatermark}"/>
+                    <TextBlock Text="{l:Localize JavConfigUrl}" />
+                    <TextBox x:Name="JavConfigTextBox" Watermark="{l:Localize JavConfigUrlWatermark}" />
                 </StackPanel>
-                
+
                 <StackPanel Classes="Option">
-                    <TextBlock Text="{l:Localize Profile}"/>
-                    <TextBox x:Name="ProfileTextBox" Watermark="{l:Localize ProfileWatermark}"/>
+                    <TextBlock Text="{l:Localize Profile}" />
+                    <TextBox x:Name="ProfileTextBox" Watermark="{l:Localize ProfileWatermark}" />
                 </StackPanel>
-                
+
                 <StackPanel Classes="Option">
-                    <TextBlock Text="{l:Localize ProxyType}"/>
+                    <TextBlock Text="{l:Localize ProxyType}" />
                     <ComboBox x:Name="ProxyTypeComboBox" Width="200" Margin="0,0,0,5">
-                        <ComboBoxItem Content="{l:Localize None}"/>
-                        <ComboBoxItem Content="{l:Localize HTTP}"/>
-                        <ComboBoxItem Content="{l:Localize SOCKS}"/>
+                        <ComboBoxItem Content="{l:Localize None}" />
+                        <ComboBoxItem Content="{l:Localize HTTP}" />
+                        <ComboBoxItem Content="{l:Localize SOCKS}" />
                     </ComboBox>
 
                     <Grid x:Name="ProxyHostPortGrid" ColumnDefinitions="*,*" IsVisible="False">
                         <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                            <TextBlock Text="{l:Localize ProxyHost}"/>
-                            <TextBox x:Name="ProxyHostTextBox" Watermark="{l:Localize ProxyHostWatermark}"/>
+                            <TextBlock Text="{l:Localize ProxyHost}" />
+                            <TextBox x:Name="ProxyHostTextBox" Watermark="{l:Localize ProxyHostWatermark}" />
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                            <TextBlock Text="{l:Localize ProxyPort}"/>
-                            <TextBox x:Name="ProxyPortTextBox" Watermark="{l:Localize ProxyPortWatermark}"/>
+                            <TextBlock Text="{l:Localize ProxyPort}" />
+                            <TextBox x:Name="ProxyPortTextBox" Watermark="{l:Localize ProxyPortWatermark}" />
                         </StackPanel>
                     </Grid>
 
                     <Grid x:Name="ProxyCredentialsGrid" ColumnDefinitions="*,*" IsVisible="False" Margin="0,5,0,0">
                         <StackPanel Grid.Column="0" Margin="0,0,5,0">
-                            <TextBlock Text="{l:Localize ProxyUsername}"/>
-                            <TextBox x:Name="ProxyUserTextBox" Watermark="{l:Localize ProxyUsernameWatermark}"/>
+                            <TextBlock Text="{l:Localize ProxyUsername}" />
+                            <TextBox x:Name="ProxyUserTextBox" Watermark="{l:Localize ProxyUsernameWatermark}" />
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                            <TextBlock Text="{l:Localize ProxyPassword}"/>
-                            <TextBox x:Name="ProxyPasswordTextBox" PasswordChar="•" Watermark="{l:Localize ProxyPasswordWatermark}"/>
+                            <TextBlock Text="{l:Localize ProxyPassword}" />
+                            <TextBox x:Name="ProxyPasswordTextBox" PasswordChar="•"
+                                     Watermark="{l:Localize ProxyPasswordWatermark}" />
                         </StackPanel>
                     </Grid>
                 </StackPanel>
-                
-                <TextBlock Classes="Header" Text="{l:Localize RawArguments}"/>
-                <TextBox x:Name="RawArgumentsTextBox" Height="100" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"/>
+
+                <TextBlock Classes="Header" Text="{l:Localize RawArguments}" />
+                <TextBox x:Name="RawArgumentsTextBox" Height="100" IsReadOnly="True" AcceptsReturn="True"
+                         TextWrapping="Wrap" />
             </StackPanel>
         </ScrollViewer>
-        
+
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-            <Button x:Name="CancelButton" Content="{l:Localize Cancel}" Margin="0,0,5,0" Width="80"/>
-            <Button x:Name="OkButton" Content="{l:Localize OK}" Width="80"/>
+            <Button x:Name="CancelButton" Content="{l:Localize Cancel}" Margin="0,0,5,0" Width="80" />
+            <Button x:Name="OkButton" Content="{l:Localize OK}" Width="80" />
         </StackPanel>
     </Grid>
 </Window>

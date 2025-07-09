@@ -69,6 +69,15 @@ namespace JagexAccountSwitcher.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account Grouping.
+        /// </summary>
+        internal static string AccountGroupingTitle {
+            get {
+                return ResourceManager.GetString("AccountGroupingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Handler.
         /// </summary>
         internal static string AccountHandler {
@@ -110,6 +119,24 @@ namespace JagexAccountSwitcher.Languages {
         internal static string Active {
             get {
                 return ResourceManager.GetString("Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assign Accounts.
+        /// </summary>
+        internal static string AssignAccounts {
+            get {
+                return ResourceManager.GetString("AssignAccounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available Accounts.
+        /// </summary>
+        internal static string AvailableAccounts {
+            get {
+                return ResourceManager.GetString("AvailableAccounts", resourceCulture);
             }
         }
         
@@ -204,6 +231,24 @@ namespace JagexAccountSwitcher.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string DeleteGroup {
+            get {
+                return ResourceManager.GetString("DeleteGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete old jar-files.
+        /// </summary>
+        internal static string DeleteJars {
+            get {
+                return ResourceManager.GetString("DeleteJars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Developer Mode.
         /// </summary>
         internal static string DeveloperMode {
@@ -254,6 +299,69 @@ namespace JagexAccountSwitcher.Languages {
         internal static string DisableWalkerUpdateDescription {
             get {
                 return ResourceManager.GetString("DisableWalkerUpdateDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit.
+        /// </summary>
+        internal static string EditGroup {
+            get {
+                return ResourceManager.GetString("EditGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group Members.
+        /// </summary>
+        internal static string GroupAccounts {
+            get {
+                return ResourceManager.GetString("GroupAccounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Color.
+        /// </summary>
+        internal static string GroupColor {
+            get {
+                return ResourceManager.GetString("GroupColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group Details.
+        /// </summary>
+        internal static string GroupDetails {
+            get {
+                return ResourceManager.GetString("GroupDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grouping.
+        /// </summary>
+        internal static string Grouping {
+            get {
+                return ResourceManager.GetString("Grouping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string GroupName {
+            get {
+                return ResourceManager.GetString("GroupName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Groups.
+        /// </summary>
+        internal static string Groups {
+            get {
+                return ResourceManager.GetString("Groups", resourceCulture);
             }
         }
         
@@ -398,6 +506,15 @@ namespace JagexAccountSwitcher.Languages {
         internal static string Navigation {
             get {
                 return ResourceManager.GetString("Navigation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New.
+        /// </summary>
+        internal static string NewGroup {
+            get {
+                return ResourceManager.GetString("NewGroup", resourceCulture);
             }
         }
         
@@ -618,6 +735,15 @@ namespace JagexAccountSwitcher.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string SaveGroup {
+            get {
+                return ResourceManager.GetString("SaveGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set Client Arguments.
         /// </summary>
         internal static string SetClientArguments {
@@ -695,6 +821,15 @@ namespace JagexAccountSwitcher.Languages {
         internal static string StartAll {
             get {
                 return ResourceManager.GetString("StartAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Group.
+        /// </summary>
+        internal static string StartGroup {
+            get {
+                return ResourceManager.GetString("StartGroup", resourceCulture);
             }
         }
         
@@ -803,6 +938,15 @@ namespace JagexAccountSwitcher.Languages {
         internal static string Step2Title {
             get {
                 return ResourceManager.GetString("Step2Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop Group.
+        /// </summary>
+        internal static string StopGroup {
+            get {
+                return ResourceManager.GetString("StopGroup", resourceCulture);
             }
         }
         

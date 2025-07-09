@@ -1,33 +1,36 @@
-﻿using Avalonia.Data.Converters;
+﻿#region
+
 using System;
 using System.Globalization;
+using Avalonia.Data.Converters;
 
-namespace JagexAccountSwitcher.Converters
+#endregion
+
+namespace JagexAccountSwitcher.Converters;
+
+public class BoolToString : IValueConverter
 {
-    public class BoolToString : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        var boolValue = value is bool b && b;
+
+        if (parameter is string paramString && paramString.Contains("|"))
         {
-            bool boolValue = value is bool b && b;
-            
-            if (parameter is string paramString && paramString.Contains("|"))
-            {
-                string[] parts = paramString.Split('|');
-                return boolValue ? parts[0] : parts[1];
-            }
-            
-            return boolValue ? "True" : "False";
+            var parts = paramString.Split('|');
+            return boolValue ? parts[0] : parts[1];
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return boolValue ? "True" : "False";
     }
 
-    // Static accessor for XAML
-    public static class StringConverters
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        public static readonly BoolToString BoolToString = new BoolToString();
+        throw new NotImplementedException();
     }
+}
+
+// Static accessor for XAML
+public static class StringConverters
+{
+    public static readonly BoolToString BoolToString = new();
 }

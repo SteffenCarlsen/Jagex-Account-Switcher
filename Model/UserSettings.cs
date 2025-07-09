@@ -1,8 +1,12 @@
-﻿using System.ComponentModel;
+﻿#region
+
+using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
 using JagexAccountSwitcher.Converters;
 using JagexAccountSwitcher.Helpers;
+
+#endregion
 
 namespace JagexAccountSwitcher.Model;
 
@@ -12,6 +16,7 @@ public class UserSettings : INotifyPropertyChanged
     public string RunelitePath { get; set; } = RuneliteHelper.GetRunelitePath();
     public string ConfigurationsPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Configurations");
     public string MicroBotJarPath { get; set; } = string.Empty;
+
     public string SelectedLanguage
     {
         get => _selectedLanguage;
@@ -21,12 +26,15 @@ public class UserSettings : INotifyPropertyChanged
             OnPropertyChanged(nameof(_selectedLanguage));
         }
     }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
     public void SaveToFile()
     {
         var json = JsonSerializer.Serialize(this, AppJsonContext.Default.UserSettings);
         File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "Settings.json"), json);
     }
-    
+
     public void LoadFromFile()
     {
         var file = Path.Combine(Directory.GetCurrentDirectory(), "Settings.json");
@@ -43,9 +51,7 @@ public class UserSettings : INotifyPropertyChanged
             }
         }
     }
-    
-    public event PropertyChangedEventHandler PropertyChanged;
-    
+
     protected virtual void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

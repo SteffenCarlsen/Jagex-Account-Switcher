@@ -1,16 +1,17 @@
-﻿using System.ComponentModel;
+﻿#region
 
-namespace JagexAccountSwitcher.ViewModels
+using System.ComponentModel;
+
+#endregion
+
+namespace JagexAccountSwitcher.ViewModels;
+
+public class LandingPageViewModel : INotifyPropertyChanged
 {
-    public class LandingPageViewModel : INotifyPropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged(string propertyName)
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        // Add properties and logic specific to the Landing Page here
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -298,4 +298,52 @@
     <data name="OK" xml:space="preserve">
     <value>OK</value>
 </data>
+    <data name="Grouping" xml:space="preserve">
+    <value>Grouping</value>
+    </data>
+    <data name="AccountGroupingTitle" xml:space="preserve">
+    <value>Account Grouping</value>
+</data>
+    <data name="Groups" xml:space="preserve">
+    <value>Groups</value>
+</data>
+    <data name="NewGroup" xml:space="preserve">
+    <value>New</value>
+</data>
+    <data name="EditGroup" xml:space="preserve">
+    <value>Edit</value>
+</data>
+    <data name="DeleteGroup" xml:space="preserve">
+    <value>Delete</value>
+</data>
+    <data name="GroupDetails" xml:space="preserve">
+    <value>Group Details</value>
+</data>
+    <data name="GroupName" xml:space="preserve">
+    <value>Name</value>
+</data>
+    <data name="GroupColor" xml:space="preserve">
+    <value>Color</value>
+</data>
+    <data name="SaveGroup" xml:space="preserve">
+    <value>Save</value>
+</data>
+    <data name="AssignAccounts" xml:space="preserve">
+    <value>Assign Accounts</value>
+</data>
+    <data name="AvailableAccounts" xml:space="preserve">
+    <value>Available Accounts</value>
+</data>
+    <data name="GroupAccounts" xml:space="preserve">
+    <value>Group Members</value>
+</data>
+    <data name="StartGroup" xml:space="preserve">
+    <value>Start Group</value>
+</data>
+    <data name="StopGroup" xml:space="preserve">
+    <value>Stop Group</value>
+</data>
+    <data name="DeleteJars" xml:space="preserve">
+        <value>Delete old jar-files</value>
+    </data>
 </root>

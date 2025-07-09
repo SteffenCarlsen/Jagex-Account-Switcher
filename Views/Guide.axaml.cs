@@ -1,6 +1,9 @@
-﻿using Avalonia;
+﻿#region
+
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+
+#endregion
 
 namespace JagexAccountSwitcher.Views;
 

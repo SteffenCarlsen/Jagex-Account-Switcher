@@ -1,12 +1,16 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Windows.Input;
+
+#endregion
 
 namespace JagexAccountSwitcher.Helpers;
 
 public class RelayCommand<T> : ICommand
 {
-    private readonly Action<T> _execute;
     private readonly Func<T, bool>[] _canExecuteConditions;
+    private readonly Action<T> _execute;
 
     public RelayCommand(Action<T> execute, params Func<T, bool>[] canExecuteConditions)
     {
@@ -28,6 +32,7 @@ public class RelayCommand<T> : ICommand
                 if (!condition(typedParameter))
                     return false;
             }
+
             return true;
         }
 
@@ -36,7 +41,7 @@ public class RelayCommand<T> : ICommand
 
     public void Execute(object parameter)
     {
-        if (parameter is T typedParameter || 
+        if (parameter is T typedParameter ||
             (parameter == null && typeof(T).IsValueType == false))
         {
             _execute((T)parameter);
@@ -51,8 +56,8 @@ public class RelayCommand<T> : ICommand
 
 public class RelayCommand : ICommand
 {
-    private readonly Action _execute;
     private readonly Func<bool>[] _canExecuteConditions;
+    private readonly Action _execute;
 
     public RelayCommand(Action execute, params Func<bool>[] canExecuteConditions)
     {
@@ -66,12 +71,13 @@ public class RelayCommand : ICommand
     {
         if (_canExecuteConditions == null || _canExecuteConditions.Length == 0)
             return true;
-            
+
         foreach (var condition in _canExecuteConditions)
         {
             if (!condition())
                 return false;
         }
+
         return true;
     }
 

@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿#region
+
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using JagexAccountSwitcher.Model;
 
-namespace JagexAccountSwitcher.Converters;
+#endregion
 
-using System.Text.Json.Serialization;
+namespace JagexAccountSwitcher.Converters;
 
 [JsonSourceGenerationOptions(WriteIndented = true)]
 [JsonSerializable(typeof(UserSettings))]

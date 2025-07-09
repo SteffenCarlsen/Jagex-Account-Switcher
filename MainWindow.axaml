@@ -30,7 +30,8 @@
         <!-- Custom Title Bar (Draggable) -->
         <Grid Grid.Row="0" Background="Black" PointerPressed="TitleBar_PointerPressed">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0">
-                <Image Source="/Assets/icons8-intelligence-64.ico" Width="16" Height="16" Margin="0,0,2,0" VerticalAlignment="Center"/>
+                <Image Source="/Assets/icons8-intelligence-64.ico" Width="16" Height="16" Margin="0,0,2,0"
+                       VerticalAlignment="Center" />
                 <TextBlock Text="{l:Localize WindowTitle}" VerticalAlignment="Center" />
             </StackPanel>
         </Grid>
@@ -53,6 +54,9 @@
                     <Button Content="{l:Localize AccountHandler}" Margin="8" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
                             CommandParameter="MassAccountHandler" />
+                    <Button Content="{l:Localize Grouping}" Margin="8" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
+                            CommandParameter="Grouping" />
                     <Button Content="{l:Localize Settings}" Margin="8" HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center" Command="{Binding ChangeViewCommand}"
                             CommandParameter="Settings" />

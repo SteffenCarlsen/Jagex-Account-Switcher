@@ -1,10 +1,14 @@
-﻿using Avalonia;
+﻿#region
+
 using System;
 using System.IO;
+using Avalonia;
+
+#endregion
 
 namespace JagexAccountSwitcher;
 
-class Program
+internal class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
@@ -18,7 +22,7 @@ class Program
         }
         catch (Exception ex)
         {
-            using StreamWriter sw = File.AppendText("error.log");
+            using var sw = File.AppendText("error.log");
             sw.WriteLine(ex.ToString());
             throw;
         }
@@ -26,8 +30,10 @@ class Program
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
+    {
+        return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+    }
 }

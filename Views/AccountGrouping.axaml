@@ -1,0 +1,140 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:JagexAccountSwitcher.ViewModels"
+             xmlns:model="using:JagexAccountSwitcher.Model"
+             xmlns:l="clr-namespace:Jeek.Avalonia.Localization;assembly=Jeek.Avalonia.Localization"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="JagexAccountSwitcher.Views.AccountGrouping"
+             x:DataType="vm:AccountGroupingViewModel"
+             x:Name="AccountGroupingView">
+
+    <Grid RowDefinitions="Auto,*" Margin="10">
+        <TextBlock Grid.Row="0" Text="{l:Localize AccountGroupingTitle}"
+                   FontSize="20" FontWeight="Bold" Margin="0,0,0,10" />
+
+        <Grid Grid.Row="1" ColumnDefinitions="250,*">
+            <!-- Left panel - Group Management -->
+            <Grid Grid.Column="0" RowDefinitions="Auto,*,Auto" Margin="0,0,10,0">
+                <TextBlock Grid.Row="0" Text="{l:Localize Groups}"
+                           FontWeight="Bold" Margin="0,0,0,5" />
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding Groups}"
+                         SelectedItem="{Binding SelectedGroup}"
+                         Margin="0,0,0,10">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="model:AccountGroup">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Rectangle Grid.Column="0" Width="16" Height="16" Margin="0,0,5,0"
+                                           Fill="{Binding Color}" />
+                                <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding MemberCount, StringFormat=({0})}"
+                                           Margin="5,0,0,0"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <Button Content="{l:Localize NewGroup}"
+                            Command="{Binding CreateGroupCommand}"
+                            Margin="0,0,5,0" />
+                    <Button Content="{l:Localize DeleteGroup}"
+                            Command="{Binding DeleteGroupCommand}"
+                            IsEnabled="{Binding HasSelectedGroup}"
+                            Margin="0,0,5,0" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Right panel - Group Details and Account Assignment -->
+            <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*" IsVisible="{Binding HasSelectedGroup}">
+                <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Text="{l:Localize GroupDetails}" FontWeight="Bold" Margin="0,0,0,5" />
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{l:Localize GroupName}"
+                                   VerticalAlignment="Center" Margin="0,0,10,5" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding EditingGroupName}" Margin="0,0,0,5" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="{l:Localize GroupColor}"
+                                   VerticalAlignment="Center" Margin="0,0,10,5" />
+                        <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="Auto,*">
+                            <Rectangle Grid.Column="0" Width="20" Height="20" Fill="{Binding EditingGroupColor}"
+                                       Margin="0,0,5,0" />
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding AvailableColors}"
+                                      SelectedItem="{Binding SelectedColor}" Width="150" HorizontalAlignment="Left">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <Rectangle Grid.Column="0" Width="16" Height="16" Fill="{Binding}"
+                                                       Margin="0,0,5,0" />
+                                            <TextBlock Grid.Column="1" Text="{Binding}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </Grid>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button Content="{l:Localize SaveGroup}"
+                                Command="{Binding SaveGroupCommand}"
+                                Margin="0,0,5,0" />
+                        <Button Content="{l:Localize StartGroup}"
+                                Command="{Binding StartGroupCommand}"
+                                IsEnabled="{Binding HasSelectedGroup}"
+                                Margin="0,0,5,0" />
+                        <Button Content="{l:Localize StopGroup}"
+                                Command="{Binding StopGroupCommand}"
+                                IsEnabled="{Binding HasSelectedGroup}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <Grid Grid.Row="2" ColumnDefinitions="*,Auto,*">
+                    <!-- Update the Available Accounts ListBox -->
+                    <Grid Grid.Column="0" RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0" Text="{l:Localize AvailableAccounts}" Margin="0,0,0,5" />
+                        <ListBox Grid.Row="1"
+                                 ItemsSource="{Binding AvailableAccounts}"
+                                 SelectedItem="{Binding SelectedAvailableAccount}"
+                                 DoubleTapped="AvailableAccounts_DoubleTapped">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="model:RunescapeAccount">
+                                    <TextBlock Text="{Binding AccountName}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+
+                    <!-- Assignment Buttons -->
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
+                        <Button Content="→"
+                                Command="{Binding AddAccountToGroupCommand}"
+                                IsEnabled="{Binding CanAddToGroup}"
+                                Margin="0,0,0,5" />
+                        <Button Content="←"
+                                Command="{Binding RemoveAccountFromGroupCommand}"
+                                IsEnabled="{Binding CanRemoveFromGroup}" />
+                    </StackPanel>
+
+                    <!-- Group Accounts -->
+                    <!-- Update the Group Accounts ListBox -->
+                    <Grid Grid.Column="2" RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0" Text="{l:Localize GroupAccounts}" Margin="0,0,0,5" />
+                        <ListBox Grid.Row="1"
+                                 ItemsSource="{Binding GroupAccounts}"
+                                 SelectedItem="{Binding SelectedGroupAccount}"
+                                 DoubleTapped="GroupAccounts_DoubleTapped">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="model:RunescapeAccount">
+                                    <TextBlock Text="{Binding AccountName}" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

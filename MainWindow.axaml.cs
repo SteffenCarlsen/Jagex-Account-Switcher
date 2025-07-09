@@ -1,8 +1,12 @@
+#region
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Platform;
-using JagexAccountSwitcher.ViewModels;
+
+#endregion
 
 namespace JagexAccountSwitcher;
 
@@ -13,7 +17,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         ExtendClientAreaToDecorationsHint = true;
         ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.PreferSystemChrome;
-        Background = Avalonia.Media.Brushes.Black;
+        Background = Brushes.Black;
         // Attach DevTools to this window
 #if DEBUG
         this.AttachDevTools();

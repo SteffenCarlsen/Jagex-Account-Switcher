@@ -1,6 +1,10 @@
-﻿using System.Globalization;
+﻿#region
+
+using System.Globalization;
 using JagexAccountSwitcher.Languages;
 using Jeek.Avalonia.Localization;
+
+#endregion
 
 namespace JagexAccountSwitcher.Converters;
 
@@ -16,7 +20,7 @@ public class ResXLocalizer : BaseLocalizer
         }
 
         ValidateLanguage();
-        
+
         Strings.Culture = new CultureInfo(_language);
 
         _hasLoaded = true;

@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:element name="root" msdata:IsDataSet="true">
 
@@ -297,4 +298,55 @@
     <data name="Guide" xml:space="preserve">
     <value>Guía</value>
 </data>
+    <data name="Grouping" xml:space="preserve">
+        <value>Agrupamiento</value>
+    </data>
+    <data name="Grouping" xml:space="preserve">
+    <value>Agrupación</value>
+</data>
+    <data name="AccountGroupingTitle" xml:space="preserve">
+    <value>Agrupación de Cuentas</value>
+</data>
+    <data name="Groups" xml:space="preserve">
+    <value>Grupos</value>
+</data>
+    <data name="NewGroup" xml:space="preserve">
+    <value>Nuevo</value>
+</data>
+    <data name="EditGroup" xml:space="preserve">
+    <value>Editar</value>
+</data>
+    <data name="DeleteGroup" xml:space="preserve">
+    <value>Eliminar</value>
+</data>
+    <data name="GroupDetails" xml:space="preserve">
+    <value>Detalles del Grupo</value>
+</data>
+    <data name="GroupName" xml:space="preserve">
+    <value>Nombre</value>
+</data>
+    <data name="GroupColor" xml:space="preserve">
+    <value>Color</value>
+</data>
+    <data name="SaveGroup" xml:space="preserve">
+    <value>Guardar</value>
+</data>
+    <data name="AssignAccounts" xml:space="preserve">
+    <value>Asignar Cuentas</value>
+</data>
+    <data name="AvailableAccounts" xml:space="preserve">
+    <value>Cuentas Disponibles</value>
+</data>
+    <data name="GroupAccounts" xml:space="preserve">
+    <value>Miembros del Grupo</value>
+</data>
+    <data name="StartGroup" xml:space="preserve">
+    <value>Iniciar Grupo</value>
+</data>
+    <data name="StopGroup" xml:space="preserve">
+    <value>Detener Grupo</value>
+</data>
+    <data name="DeleteJars" xml:space="preserve">
+        <value>Eliminar archivos jar antiguos</value>
+    </data>
 </root>

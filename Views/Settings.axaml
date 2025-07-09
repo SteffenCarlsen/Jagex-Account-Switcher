@@ -16,56 +16,56 @@
                        FontSize="24"
                        FontWeight="Bold"
                        Margin="0,0,0,15"
-                       HorizontalAlignment="Center"/>
+                       HorizontalAlignment="Center" />
 
             <!-- RuneLite Path Section -->
             <TextBlock Text="{l:Localize RuneliteLocation}"
                        FontWeight="SemiBold"
-                       Margin="0,0,0,5"/>
+                       Margin="0,0,0,5" />
             <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,15">
                 <TextBox Grid.Column="0"
                          Text="{Binding RunelitePath}"
                          Watermark="{l:Localize RunelitePathWatermark}"
-                         IsReadOnly="True"/>
+                         IsReadOnly="True" />
                 <Button Grid.Column="1"
                         Content="{l:Localize BrowseButton}"
                         Click="BrowseRunelitePath_Click"
-                        Margin="5,0,0,0"/>
+                        Margin="5,0,0,0" />
             </Grid>
 
             <!-- Configurations Path Section -->
             <TextBlock Text="{l:Localize ConfigurationsLocation}"
                        FontWeight="SemiBold"
-                       Margin="0,0,0,5"/>
+                       Margin="0,0,0,5" />
             <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,15">
                 <TextBox Grid.Column="0"
                          Text="{Binding ConfigurationsPath}"
                          Watermark="{l:Localize ConfigurationsPathWatermark}"
-                         IsReadOnly="True"/>
+                         IsReadOnly="True" />
                 <Button Grid.Column="1"
                         Content="{l:Localize BrowseButton}"
                         Click="BrowseConfigurationsPath_Click"
-                        Margin="5,0,0,0"/>
+                        Margin="5,0,0,0" />
             </Grid>
 
             <!-- Microbot Jar Path Section -->
             <TextBlock Text="{l:Localize MicrobotJarLocation}"
                        FontWeight="SemiBold"
-                       Margin="0,0,0,5"/>
+                       Margin="0,0,0,5" />
             <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,5">
                 <TextBox Grid.Column="0"
                          Text="{Binding MicroBotJarPath}"
                          Watermark="{l:Localize MicrobotJarPathWatermark}"
-                         IsReadOnly="True"/>
+                         IsReadOnly="True" />
                 <Button Grid.Column="1"
                         Content="{l:Localize BrowseButton}"
                         Click="BrowseMicrobotJarPath_Click"
-                        Margin="5,0,0,0"/>
+                        Margin="5,0,0,0" />
                 <Button Grid.Column="2"
                         Content="{Binding IsDownloading, Converter={x:Static converters:StringConverters.BoolToString}, ConverterParameter='Downloading...|Download Latest'}"
                         Click="DownloadLatestMicrobotJar_Click"
                         IsEnabled="{Binding !IsDownloading}"
-                        Margin="5,0,0,0"/>
+                        Margin="5,0,0,0" />
             </Grid>
             <!-- Add Progress Bar -->
             <Grid ColumnDefinitions="*,Auto"
@@ -75,19 +75,24 @@
                              Value="{Binding DownloadProgress}"
                              Minimum="0"
                              Maximum="1"
-                             Height="20"/>
+                             Height="20" />
                 <TextBlock Grid.Column="1"
                            Text="{Binding DownloadProgressText}"
                            VerticalAlignment="Center"
-                           Margin="5,0,0,0"/>
+                           Margin="5,0,0,0" />
             </Grid>
+            <!-- Microbot Jar Path Section -->
+            <Button
+                Content="{l:Localize DeleteJars}"
+                Click="DeleteOldMicrobotJars_Click"
+                Margin="5,0,0,0" />
             <!-- Language Selection -->
-            <TextBlock Text="{l:Localize Language}" FontWeight="SemiBold" Margin="0,10,0,5"/>
+            <TextBlock Text="{l:Localize Language}" FontWeight="SemiBold" Margin="0,10,0,5" />
             <ComboBox ItemsSource="{Binding DisplayLanguages}"
                       SelectedItem="{Binding SelectedLanguage}"
                       Margin="0,0,0,15"
                       Width="200"
-                      HorizontalAlignment="Left"/>
+                      HorizontalAlignment="Left" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

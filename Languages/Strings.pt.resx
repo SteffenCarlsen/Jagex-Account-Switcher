@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
                 xmlns="">
         <xsd:element name="root" msdata:IsDataSet="true">
 
@@ -297,4 +298,55 @@
     <data name="Guide" xml:space="preserve">
     <value>Guia</value>
 </data>
+    <data name="Grouping" xml:space="preserve">
+        <value>Agrupamento</value>
+    </data>
+    <data name="Grouping" xml:space="preserve">
+    <value>Agrupamento</value>
+</data>
+    <data name="AccountGroupingTitle" xml:space="preserve">
+    <value>Agrupamento de Contas</value>
+</data>
+    <data name="Groups" xml:space="preserve">
+    <value>Grupos</value>
+</data>
+    <data name="NewGroup" xml:space="preserve">
+    <value>Novo</value>
+</data>
+    <data name="EditGroup" xml:space="preserve">
+    <value>Editar</value>
+</data>
+    <data name="DeleteGroup" xml:space="preserve">
+    <value>Excluir</value>
+</data>
+    <data name="GroupDetails" xml:space="preserve">
+    <value>Detalhes do Grupo</value>
+</data>
+    <data name="GroupName" xml:space="preserve">
+    <value>Nome</value>
+</data>
+    <data name="GroupColor" xml:space="preserve">
+    <value>Cor</value>
+</data>
+    <data name="SaveGroup" xml:space="preserve">
+    <value>Salvar</value>
+</data>
+    <data name="AssignAccounts" xml:space="preserve">
+    <value>Atribuir Contas</value>
+</data>
+    <data name="AvailableAccounts" xml:space="preserve">
+    <value>Contas Disponíveis</value>
+</data>
+    <data name="GroupAccounts" xml:space="preserve">
+    <value>Membros do Grupo</value>
+</data>
+    <data name="StartGroup" xml:space="preserve">
+    <value>Iniciar Grupo</value>
+</data>
+    <data name="StopGroup" xml:space="preserve">
+    <value>Parar Grupo</value>
+</data>
+    <data name="DeleteJars" xml:space="preserve">
+        <value>Excluir arquivos jar antigos</value>
+    </data>
 </root>
