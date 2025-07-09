@@ -214,6 +214,45 @@ public class SettingsViewModel : ViewModelBase, IDisposable
         }
     }
 
+    private string GetApplicationVersion()
+    {
+        // Try multiple approaches to get the version
+        try
+        {
+            // Approach 1: Try using Environment.ProcessPath (.NET 5+)
+            if (!string.IsNullOrEmpty(Environment.ProcessPath) && File.Exists(Environment.ProcessPath))
+            {
+                var versionInfo = FileVersionInfo.GetVersionInfo(Environment.ProcessPath);
+                if (!string.IsNullOrEmpty(versionInfo.FileVersion))
+                {
+                    return versionInfo.FileVersion;
+                }
+            }
+        
+            // Approach 2: Try to get version from assembly attributes
+            var assembly = Assembly.GetExecutingAssembly();
+            var fileVersionAttr = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
+            if (fileVersionAttr != null && !string.IsNullOrEmpty(fileVersionAttr.Version))
+            {
+                return fileVersionAttr.Version;
+            }
+        
+            // Approach 3: Try assembly version
+            var version = assembly.GetName().Version;
+            if (version != null)
+            {
+                return version.ToString();
+            }
+        
+            // Fallback: Use the version from csproj
+            return "1.6.0.2"; // Update this with each release
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error getting version: {ex.Message}");
+            return "1.6.0.2"; // Fallback version
+        }
+    }
     public async Task CheckForUpdates(bool showNoUpdateMessage = false)
     {
         try
@@ -221,9 +260,7 @@ public class SettingsViewModel : ViewModelBase, IDisposable
             IsCheckingForUpdates = true;
 
             // Get current version from assembly
-            var assembly = Assembly.GetExecutingAssembly();
-            var versionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            CurrentVersion = versionInfo.FileVersion;
+            CurrentVersion = GetApplicationVersion();
 
             // Get latest release from GitHub
             var latestRelease = await ReleaseManager.Instance.GetLatestAsync("SteffenCarlsen", "Jagex-Account-Switcher");
