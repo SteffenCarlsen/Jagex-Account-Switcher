@@ -245,12 +245,12 @@ public class SettingsViewModel : ViewModelBase, IDisposable
             }
         
             // Fallback: Use the version from csproj
-            return "1.6.0.3"; // Update this with each release
+            return "1.6.0.4"; // Update this with each release
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Error getting version: {ex.Message}");
-            return "1.6.0.3"; // Fallback version
+            return "1.6.0.4"; // Fallback version
         }
     }
     public async Task CheckForUpdates(bool showNoUpdateMessage = false)
@@ -326,108 +326,123 @@ public class SettingsViewModel : ViewModelBase, IDisposable
         }
     }
 
-    private async Task DownloadAndInstallUpdate(Release latestRelease)
+   private async Task DownloadAndInstallUpdate(Release latestRelease)
+{
+    try
     {
-        try
+        IsUpdating = true;
+        UpdateProgress = 0;
+        var operationSystem = Environment.OSVersion.Platform;
+        var stringToFind = operationSystem == PlatformID.MacOSX ? "macos" : "windows";
+
+        // Find the asset to download (usually the exe or zip file)
+        var asset = latestRelease.Assets.FirstOrDefault(a => a.Name.Contains(stringToFind) && a.Name.EndsWith(".zip"));
+        if (asset == null)
         {
-            IsUpdating = true;
-            UpdateProgress = 0;
-            var operationSystem = Environment.OSVersion.Platform;
-            var stringToFind = operationSystem == PlatformID.MacOSX ? "macos" : "windows";
+            await MessageBoxManager.GetMessageBoxStandard("Update Error",
+                "Could not find the update package in the release assets.", ButtonEnum.Ok, Icon.Error).ShowAsync();
+            return;
+        }
 
-            // Find the asset to download (usually the exe or zip file)
-            var asset = latestRelease.Assets.FirstOrDefault(a => a.Name.Contains(stringToFind) && a.Name.EndsWith(".zip"));
-            if (asset == null)
+        // Create updates directory if it doesn't exist
+        var updatesDir = Path.Combine(Directory.GetCurrentDirectory(), "Updates");
+        Directory.CreateDirectory(updatesDir);
+
+        var downloadPath = Path.Combine(updatesDir, asset.Name);
+
+        using (var client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Add("User-Agent", "JagexAccountSwitcher");
+
+            // Download with progress tracking
+            using (var response = await client.GetAsync(asset.DownloadUrl, HttpCompletionOption.ResponseHeadersRead))
             {
-                await MessageBoxManager.GetMessageBoxStandard("Update Error",
-                    "Could not find the update package in the release assets.", ButtonEnum.Ok, Icon.Error).ShowAsync();
-                return;
-            }
+                response.EnsureSuccessStatusCode();
 
-            // Create updates directory if it doesn't exist
-            var updatesDir = Path.Combine(Directory.GetCurrentDirectory(), "Updates");
-            Directory.CreateDirectory(updatesDir);
-
-            var downloadPath = Path.Combine(updatesDir, asset.Name);
-
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("User-Agent", "JagexAccountSwitcher");
-
-                // Download with progress tracking
-                using (var response = await client.GetAsync(asset.DownloadUrl, HttpCompletionOption.ResponseHeadersRead))
+                var totalBytes = response.Content.Headers.ContentLength;
+                using (var contentStream = await response.Content.ReadAsStreamAsync())
+                using (var fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write))
                 {
-                    response.EnsureSuccessStatusCode();
+                    var buffer = new byte[8192];
+                    long totalBytesRead = 0;
+                    int bytesRead;
 
-                    var totalBytes = response.Content.Headers.ContentLength;
-                    using (var contentStream = await response.Content.ReadAsStreamAsync())
-                    using (var fileStream = new FileStream(downloadPath, FileMode.Create, FileAccess.Write))
+                    while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                     {
-                        var buffer = new byte[8192];
-                        long totalBytesRead = 0;
-                        int bytesRead;
+                        await fileStream.WriteAsync(buffer, 0, bytesRead);
+                        totalBytesRead += bytesRead;
 
-                        while ((bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                        if (totalBytes.HasValue)
                         {
-                            await fileStream.WriteAsync(buffer, 0, bytesRead);
-                            totalBytesRead += bytesRead;
-
-                            if (totalBytes.HasValue)
-                            {
-                                UpdateProgress = (double)totalBytesRead / totalBytes.Value;
-                            }
+                            UpdateProgress = (double)totalBytesRead / totalBytes.Value;
                         }
                     }
                 }
             }
+        }
 
-            // Create updater batch file
-            var currentExePath = Process.GetCurrentProcess().MainModule.FileName;
-            var batchFilePath = Path.Combine(updatesDir, "update.bat");
-
-            var batchContent = @"
+        // Get the current application directory
+        var currentAppDir = Directory.GetCurrentDirectory();
+        var extractDir = Path.Combine(updatesDir, "extracted");
+        
+        // Create batch file that will extract and update
+        var batchFilePath = Path.Combine(updatesDir, "update.bat");
+        
+        var batchContent = @"
 @echo off
 echo Updating Jagex Account Switcher...
 timeout /t 2 /nobreak > nul
-copy /Y ""{0}"" ""{1}""
+
+echo Extracting files...
+powershell -Command ""Expand-Archive -Path '{0}' -DestinationPath '{1}' -Force""
+
+echo Copying files...
+xcopy /E /Y ""{1}\*.*"" ""{2}\"" 
+
+echo Cleaning up...
+rd /S /Q ""{1}""
+
 echo Update complete!
-start """" ""{1}""
+cd /d ""{2}""
+start """" ""{2}\JagexAccountSwitcher.exe""
 del ""%~f0""
-".Trim().Replace("{0}", downloadPath.Replace("\\", "\\\\")).Replace("{1}", currentExePath.Replace("\\", "\\\\"));
+".Trim().Replace("{0}", downloadPath.Replace("\\", "\\\\"))
+        .Replace("{1}", extractDir.Replace("\\", "\\\\"))
+        .Replace("{2}", currentAppDir.Replace("\\", "\\\\"));
 
-            await File.WriteAllTextAsync(batchFilePath, batchContent);
+        await File.WriteAllTextAsync(batchFilePath, batchContent);
 
-            // Show final confirmation
-            var result = await MessageBoxManager.GetMessageBoxStandard("Update Ready",
-                "The update has been downloaded and is ready to install. The application will close to complete the update. Continue?",
-                ButtonEnum.YesNo, Icon.Question).ShowAsync();
+        // Show final confirmation
+        var result = await MessageBoxManager.GetMessageBoxStandard("Update Ready",
+            "The update has been downloaded and is ready to install. The application will close to complete the update. Continue?",
+            ButtonEnum.YesNo, Icon.Question).ShowAsync();
 
-            if (result == ButtonResult.Yes)
+        if (result == ButtonResult.Yes)
+        {
+            // Launch updater and exit
+            Process.Start(new ProcessStartInfo
             {
-                // Launch updater and exit
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = $"/c start \"\" \"{batchFilePath}\"",
-                    UseShellExecute = true,
-                    CreateNoWindow = true
-                });
+                FileName = "cmd.exe",
+                Arguments = $"/c start \"\" \"{batchFilePath}\"",
+                UseShellExecute = true,
+                CreateNoWindow = true
+            });
 
-                // Exit application
-                Environment.Exit(0);
-            }
-        }
-        catch (Exception ex)
-        {
-            await MessageBoxManager.GetMessageBoxStandard("Update Error",
-                $"Failed to download update: {ex.Message}", ButtonEnum.Ok, Icon.Error).ShowAsync();
-        }
-        finally
-        {
-            IsUpdating = false;
-            UpdateProgress = 0;
+            // Exit application
+            Environment.Exit(0);
         }
     }
+    catch (Exception ex)
+    {
+        await MessageBoxManager.GetMessageBoxStandard("Update Error",
+            $"Failed to download update: {ex.Message}", ButtonEnum.Ok, Icon.Error).ShowAsync();
+    }
+    finally
+    {
+        IsUpdating = false;
+        UpdateProgress = 0;
+    }
+}
 
     public async Task CheckForUpdatesOnStartup()
     {
