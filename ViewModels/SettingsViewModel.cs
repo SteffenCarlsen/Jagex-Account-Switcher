@@ -45,7 +45,11 @@ public class SettingsViewModel : ViewModelBase, IDisposable
 
         // Subscribe to property changes from UserSettings
         _userSettings.PropertyChanged += UserSettings_PropertyChanged;
-        CheckForUpdatesOnStartup();
+        var operationSystem = Environment.OSVersion.Platform;
+        if (operationSystem != PlatformID.MacOSX)
+        {
+            CheckForUpdatesOnStartup();
+        }
     }
 
     public bool IsCheckingForUpdates
