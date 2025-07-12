@@ -241,10 +241,11 @@ public class AccountGroupingViewModel : INotifyPropertyChanged
                         UserSettings.ConfigurationsPath,
                         UserSettings.RunelitePath))
                 {
+                    bool hasDeveloperMode = accountLinker.Account.ClientArguments != null && accountLinker.Account.ClientArguments.Contains("--developer-mode");
                     var startInfo = new ProcessStartInfo
                     {
                         FileName = "javaw.exe",
-                        Arguments = $"-jar \"{UserSettings.MicroBotJarPath}\"" + $" {accountLinker.Account.ClientArguments}",
+                        Arguments = $"-jar{(hasDeveloperMode ? " -ea" : string.Empty)} \"{UserSettings.MicroBotJarPath}\"" + $" {accountLinker.Account.ClientArguments}",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
