@@ -174,7 +174,7 @@ public class AccountOverviewViewModel : INotifyPropertyChanged
 
     private void UpdateClientArgs()
     {
-        var dialog = new ClientArgumentsDialog(SelectedAccount.ClientArguments ?? string.Empty);
+        var dialog = new ClientArgumentsDialog(SelectedAccount.ClientArguments ?? string.Empty, SelectedAccount.RamLimitation);
 
         // Get the main window to use as owner
         var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
@@ -190,6 +190,15 @@ public class AccountOverviewViewModel : INotifyPropertyChanged
                 Dispatcher.UIThread.Post(() =>
                 {
                     SelectedAccount.ClientArguments = dialog.ClientArguments;
+                    SaveAccounts();
+                    OnPropertyChanged(nameof(Accounts));
+                });
+            }
+            if (dialog.SelectedRamLimitation != null)
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    SelectedAccount.RamLimitation = dialog.SelectedRamLimitation;
                     SaveAccounts();
                     OnPropertyChanged(nameof(Accounts));
                 });

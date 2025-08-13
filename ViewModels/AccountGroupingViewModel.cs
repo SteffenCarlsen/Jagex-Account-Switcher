@@ -244,7 +244,7 @@ public class AccountGroupingViewModel : INotifyPropertyChanged
                     bool hasDeveloperMode = accountLinker.Account.ClientArguments != null && accountLinker.Account.ClientArguments.Contains("--developer-mode");
                     var startInfo = new ProcessStartInfo
                     {
-                        FileName = "javaw.exe",
+                        FileName = "javaw",
                         Arguments = $"-jar{(hasDeveloperMode ? " -ea" : string.Empty)} \"{UserSettings.MicroBotJarPath}\"" + $" {accountLinker.Account.ClientArguments}",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,

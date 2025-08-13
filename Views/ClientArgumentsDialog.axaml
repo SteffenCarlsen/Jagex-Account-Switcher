@@ -102,8 +102,15 @@
                                      Watermark="{l:Localize ProxyPasswordWatermark}" />
                         </StackPanel>
                     </Grid>
+                    <TextBlock Text="RAM Limitation:"/>
+                    <ComboBox x:Name="RamLimitationComboBox" Width="200">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Description}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
-
                 <TextBlock Classes="Header" Text="{l:Localize RawArguments}" />
                 <TextBox x:Name="RawArgumentsTextBox" Height="100" IsReadOnly="True" AcceptsReturn="True"
                          TextWrapping="Wrap" />

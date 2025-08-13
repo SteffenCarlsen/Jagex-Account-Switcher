@@ -1,10 +1,14 @@
 ﻿#region
 
+using System;
+using System.Linq;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using JagexAccountSwitcher.Helpers;
+using JagexAccountSwitcher.Model;
 
 #endregion
 
@@ -35,6 +39,7 @@ public partial class ClientArgumentsDialog : Window
     private TextBox _proxyUserTextBox;
     private TextBox _rawArgumentsTextBox;
     private CheckBox _safeModeCheckBox;
+    private ComboBox _ramLimitationComboBox;
 
     public ClientArgumentsDialog()
     {
@@ -46,13 +51,14 @@ public partial class ClientArgumentsDialog : Window
         RegisterEvents();
     }
 
-    public ClientArgumentsDialog(string existingArguments) : this()
+    public ClientArgumentsDialog(string existingArguments, RamLimitationEnum selectedAccountRamLimitation) : this()
     {
-        ParseExistingArguments(existingArguments);
+        ParseExistingArguments(existingArguments, selectedAccountRamLimitation);
     }
 
 
     public string ClientArguments { get; private set; }
+    public RamLimitationEnum SelectedRamLimitation { get; private set; }
 
     private void InitializeComponent()
     {
@@ -63,6 +69,14 @@ public partial class ClientArgumentsDialog : Window
     {
         _cleanJagexLauncherCheckBox = this.FindControl<CheckBox>("CleanJagexLauncherCheckBox");
         _developerModeCheckBox = this.FindControl<CheckBox>("DeveloperModeCheckBox");
+        // Set developer mode to checked by default to support the PluginHub
+        if (_developerModeCheckBox != null) _developerModeCheckBox.IsChecked = true;
+        _ramLimitationComboBox = this.FindControl<ComboBox>("RamLimitationComboBox");
+        if (_ramLimitationComboBox != null)
+        {
+            // Populate with values from the enum
+            _ramLimitationComboBox.ItemsSource = EnumHelper.GetEnumValuesWithDescriptions<RamLimitationEnum>();
+        }
         _debugCheckBox = this.FindControl<CheckBox>("DebugCheckBox");
         _microbotDebugCheckBox = this.FindControl<CheckBox>("MicrobotDebugCheckBox");
         _safeModeCheckBox = this.FindControl<CheckBox>("SafeModeCheckBox");
@@ -105,7 +119,8 @@ public partial class ClientArgumentsDialog : Window
             _proxyCredentialsGrid.IsVisible = showProxyFields;
             UpdateRawArguments();
         };
-
+        
+        _ramLimitationComboBox.SelectionChanged += (s, e) => UpdateRawArguments();
         _javConfigTextBox.TextChanged += (s, e) => UpdateRawArguments();
         _profileTextBox.TextChanged += (s, e) => UpdateRawArguments();
         _proxyTypeComboBox.SelectionChanged += (s, e) => UpdateRawArguments();
@@ -171,12 +186,10 @@ public partial class ClientArgumentsDialog : Window
 
             sb.Append($"-proxy-type={proxyType} ");
         }
-
-
         _rawArgumentsTextBox.Text = sb.ToString().Trim();
     }
 
-    private void ParseExistingArguments(string arguments)
+    private void ParseExistingArguments(string arguments, RamLimitationEnum selectedAccountRamLimitation)
     {
         if (string.IsNullOrWhiteSpace(arguments))
             return;
@@ -245,11 +258,19 @@ public partial class ClientArgumentsDialog : Window
             else if (arguments.Contains("-proxy-type=SOCKS"))
                 _proxyTypeComboBox.SelectedIndex = 2;
         }
+        
+        if (_ramLimitationComboBox is { ItemsSource: not null })
+        {
+            _ramLimitationComboBox.SelectedIndex = EnumHelper.GetEnumIndex(selectedAccountRamLimitation);
+        }
     }
 
     private void OnOkButtonClick(object sender, RoutedEventArgs e)
     {
         ClientArguments = _rawArgumentsTextBox.Text;
-        Close(ClientArguments);
+        SelectedRamLimitation = (_ramLimitationComboBox.SelectedItem is EnumHelper.EnumDescriptionItem<RamLimitationEnum> selectedItem) 
+            ? selectedItem.Value 
+            : RamLimitationEnum.Default;
+        Close((ClientArguments, SelectedRamLimitation));
     }
 }

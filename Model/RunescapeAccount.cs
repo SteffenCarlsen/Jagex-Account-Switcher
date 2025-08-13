@@ -9,6 +9,7 @@ namespace JagexAccountSwitcher.Model;
 public class RunescapeAccount : INotifyPropertyChanged
 {
     private bool _isActiveAccount;
+    private RamLimitationEnum _ramLimitation = RamLimitationEnum.TwoGigabytes;
     public string AccountName { get; set; }
     public string FilePath { get; set; }
 
@@ -37,6 +38,19 @@ public class RunescapeAccount : INotifyPropertyChanged
                 _clientArguments = value;
                 OnPropertyChanged(nameof(ClientArguments));
                 OnPropertyChanged(nameof(HasClientArguments));
+            }
+        }
+    }
+    
+    public RamLimitationEnum RamLimitation
+    {
+        get => _ramLimitation;
+        set
+        {
+            if (_ramLimitation != value)
+            {
+                _ramLimitation = value;
+                OnPropertyChanged(nameof(RamLimitation));
             }
         }
     }

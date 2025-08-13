@@ -151,8 +151,8 @@ public class MassAccountHandlerViewModel : INotifyPropertyChanged
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = "javaw.exe",
-                Arguments = $"-jar{(model.Account.ClientArguments != null && model.Account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {model.Account.ClientArguments}",
+                FileName = "javaw",
+                Arguments = $" {EnumHelper.GetLaunchParamterFromRamLimitation(model.Account.RamLimitation)} -jar{(model.Account.ClientArguments != null && model.Account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {model.Account.ClientArguments}",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -203,8 +203,8 @@ public class MassAccountHandlerViewModel : INotifyPropertyChanged
             {
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = "javaw.exe",
-                    Arguments = $"-jar \"{_settings.MicroBotJarPath}\"" + $" {account.ClientArguments}",
+                    FileName = "javaw",
+                    Arguments = $" {EnumHelper.GetLaunchParamterFromRamLimitation(account.RamLimitation)} -jar{(account.ClientArguments != null && account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {account.ClientArguments}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
