@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -72,5 +73,10 @@ public partial class Settings : UserControl
     private async void DeleteOldMicrobotJars_Click(object? sender, RoutedEventArgs e)
     {
         await _viewModel.DeleteOldMicrobotJars();
+    }
+
+    private async void ToggleButton_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        await _viewModel.ToggleSecurityMode();
     }
 }

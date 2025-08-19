@@ -13,9 +13,21 @@ namespace JagexAccountSwitcher.Model;
 public class UserSettings : INotifyPropertyChanged
 {
     private string _selectedLanguage;
+    private bool _enableSecurityMode;
     public string RunelitePath { get; set; } = RuneliteHelper.GetRunelitePath();
     public string ConfigurationsPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Configurations");
     public string MicroBotJarPath { get; set; } = string.Empty;
+
+    public bool EnableSecurityMode
+    {
+        get => _enableSecurityMode;
+        set
+        {
+            _enableSecurityMode = value;
+            OnPropertyChanged(nameof(_enableSecurityMode));
+        }
+        
+    }
 
     public string SelectedLanguage
     {
@@ -48,6 +60,7 @@ public class UserSettings : INotifyPropertyChanged
                 ConfigurationsPath = config.ConfigurationsPath;
                 MicroBotJarPath = config.MicroBotJarPath;
                 SelectedLanguage = config.SelectedLanguage;
+                EnableSecurityMode = config.EnableSecurityMode;
             }
         }
     }

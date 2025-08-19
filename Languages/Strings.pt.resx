@@ -349,4 +349,7 @@
     <data name="DeleteJars" xml:space="preserve">
         <value>Excluir arquivos jar antigos</value>
     </data>
+    <data name="EnableProcessBlocking" xml:space="preserve">
+        <value>Impedir que a Jagex receba informações de processo sobre o JagexAccountSwitcher (requer a execução do switcher como administrador)</value>
+    </data>
 </root>

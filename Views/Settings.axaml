@@ -86,6 +86,15 @@
                 Content="{l:Localize DeleteJars}"
                 Click="DeleteOldMicrobotJars_Click"
                 Margin="5,0,0,0" />
+            <!-- Enable process blocking -->
+            <CheckBox Content="{l:Localize EnableProcessBlocking}"
+                      IsChecked="{Binding IsProcessBlockingEnabled}"
+                      IsVisible="{Binding IsWindowsOS}"
+                      Margin="0,10,0,15"
+                      ToolTip.Tip = "Applies process protection measures to prevent external access or manipulation.
+Requires administrator privileges on Windows. Sets high integrity level, applies
+restrictive security descriptors, and adds job object restrictions to limit external process access."
+                      IsCheckedChanged="ToggleButton_OnIsCheckedChanged"/>
             <!-- Language Selection -->
             <TextBlock Text="{l:Localize Language}" FontWeight="SemiBold" Margin="0,10,0,5" />
             <ComboBox ItemsSource="{Binding DisplayLanguages}"

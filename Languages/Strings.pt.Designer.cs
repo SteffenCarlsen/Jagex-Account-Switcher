@@ -312,6 +312,15 @@ namespace JagexAccountSwitcher.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Impedir que a Jagex receba informações de processo sobre o JagexAccountSwitcher (requer a execução do switcher como administrador).
+        /// </summary>
+        internal static string EnableProcessBlocking {
+            get {
+                return ResourceManager.GetString("EnableProcessBlocking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Membros do Grupo.
         /// </summary>
         internal static string GroupAccounts {

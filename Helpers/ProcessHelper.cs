@@ -2,6 +2,8 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
 using Avalonia.Threading;
 using JagexAccountSwitcher.Model;
 
@@ -88,4 +90,20 @@ public static class ProcessHelper
             Console.WriteLine($"Error killing process: {ex.Message}");
         }
     }
+    
+    /// <summary>
+    /// Checks if the current process is running with administrator privileges
+    /// </summary>
+    /// <returns>True if the process has admin rights, false otherwise</returns>
+    public static bool IsRunningAsAdmin()
+    {
+        // This only applies to Windows
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return false;
+                
+        using var identity = WindowsIdentity.GetCurrent();
+        var principal = new WindowsPrincipal(identity);
+        return principal.IsInRole(WindowsBuiltInRole.Administrator);
+    }
+    
 }

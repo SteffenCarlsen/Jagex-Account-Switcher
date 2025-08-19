@@ -13,6 +13,7 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using GithubReleaseDownloader;
 using GithubReleaseDownloader.Entities;
+using JagexAccountSwitcher.Helpers;
 using JagexAccountSwitcher.Model;
 using Jeek.Avalonia.Localization;
 using MsBox.Avalonia;
@@ -42,6 +43,7 @@ public class SettingsViewModel : ViewModelBase, IDisposable
         _storageProvider = storageProvider;
         _userSettings = userSettings;
         _selectedLanguage = userSettings.SelectedLanguage;
+        _isProcessBlockingEnabled = userSettings.EnableSecurityMode;
 
         // Subscribe to property changes from UserSettings
         _userSettings.PropertyChanged += UserSettings_PropertyChanged;
@@ -192,6 +194,38 @@ public class SettingsViewModel : ViewModelBase, IDisposable
         }
     }
 
+    private bool _isProcessBlockingEnabled;
+
+    public bool IsProcessBlockingEnabled
+    {
+        get => _isProcessBlockingEnabled;
+        set
+        {
+            if (value && !ProcessHelper.IsRunningAsAdmin())
+            {
+                // Show message that admin privileges are required
+                MessageBoxManager.GetMessageBoxStandard(
+                    "Administrator Privileges Required", 
+                    "Process blocking requires administrator privileges. Please restart the application as administrator.",
+                    ButtonEnum.Ok, Icon.Warning).ShowAsync();
+                _isProcessBlockingEnabled = false;
+                return;
+            }
+
+            if (value && ProcessHelper.IsRunningAsAdmin())
+            {
+                ProcessProtection.RestrictProcessAccess();
+            }
+        
+            _isProcessBlockingEnabled = value;
+            _userSettings.EnableSecurityMode = value;
+            _userSettings.SaveToFile();
+            this.RaisePropertyChanged();
+        }
+    }
+
+    public bool IsWindowsOS => System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows);
+
     public void Dispose()
     {
         _userSettings.PropertyChanged -= UserSettings_PropertyChanged!;
@@ -211,6 +245,14 @@ public class SettingsViewModel : ViewModelBase, IDisposable
         else if (e.PropertyName == nameof(UserSettings.MicroBotJarPath))
         {
             this.RaisePropertyChanged(nameof(MicroBotJarPath));
+        }
+        else if (e.PropertyName == nameof(UserSettings.SelectedLanguage))
+        {
+            this.RaisePropertyChanged(nameof(SelectedLanguage));
+        }
+        else if (e.PropertyName == nameof(UserSettings.EnableSecurityMode))
+        {
+            this.RaisePropertyChanged(nameof(IsProcessBlockingEnabled));
         }
     }
 
@@ -245,12 +287,12 @@ public class SettingsViewModel : ViewModelBase, IDisposable
             }
         
             // Fallback: Use the version from csproj
-            return "1.6.0.6"; // Update this with each release
+            return "1.7.0.0"; // Update this with each release
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Error getting version: {ex.Message}");
-            return "1.6.0.6"; // Fallback version
+            return "1.7.0.0"; // Fallback version
         }
     }
     public async Task CheckForUpdates(bool showNoUpdateMessage = false)
@@ -623,5 +665,10 @@ del ""%~f0""
         {
             await MessageBoxManager.GetMessageBoxStandard("Error", $"Failed to delete old Microbot jar files: {ex.Message}", ButtonEnum.Ok, Icon.Error, WindowStartupLocation.CenterOwner).ShowAsync();
         }
+    }
+
+    public async Task ToggleSecurityMode()
+    {
+        IsProcessBlockingEnabled = !IsProcessBlockingEnabled;
     }
 }

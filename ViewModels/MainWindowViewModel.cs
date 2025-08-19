@@ -1,11 +1,12 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Avalonia.Controls;
-using CommunityToolkit.Mvvm.Input;
+using JagexAccountSwitcher.Helpers;
 using JagexAccountSwitcher.Model;
 using JagexAccountSwitcher.Views;
 
@@ -29,9 +30,15 @@ public class MainWindowViewModel : INotifyPropertyChanged
         SettingsViewModel = new SettingsViewModel(window.StorageProvider, _settings);
         MassAccountHandlerViewModel = new MassAccountHandlerViewModel(AccountOverviewViewModel, _settings);
         AccountGroupingViewModel = new AccountGroupingViewModel(AccountOverviewViewModel, _settings);
-        ChangeViewCommand = new RelayCommand<string>(ChangeView);
+        ChangeViewCommand = new CommunityToolkit.Mvvm.Input.RelayCommand<string>(ChangeView);
         _viewInstances = new Dictionary<string, object>();
         ChangeView("LandingPage");
+#if WINDOWS
+        if (_settings.EnableSecurityMode)
+        {
+            ProcessProtection.RestrictProcessAccess();
+        }
+#endif
     }
 
     public AccountOverviewViewModel AccountOverviewViewModel { get; set; }
