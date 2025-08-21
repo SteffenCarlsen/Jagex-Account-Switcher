@@ -753,6 +753,15 @@ namespace JagexAccountSwitcher.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Buscar.
+        /// </summary>
+        internal static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Establecer Argumentos de Cliente.
         /// </summary>
         internal static string SetClientArguments {

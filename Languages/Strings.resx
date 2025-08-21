@@ -349,4 +349,7 @@
     <data name="EnableProcessBlocking" xml:space="preserve">
         <value>Stop Jagex from receiving process info about JagexAccountSwitcher (Requires to run the switcher as admin)</value>
     </data>
+    <data name="Search" xml:space="preserve">
+        <value>Search</value>
+    </data>
 </root>

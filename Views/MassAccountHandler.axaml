@@ -24,7 +24,7 @@
                        HorizontalAlignment="Left" Margin="10,0,0,0" />
         </Grid>
 
-        <ListBox Grid.Row="2" ItemsSource="{Binding AccountProcesses}" Margin="0,0,0,10">
+        <ListBox Grid.Row="2" ItemsSource="{Binding FilteredAccountProcesses}" Margin="0,0,0,10">
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="model:MassAccountLinkerModel">
                     <Grid ColumnDefinitions="150,120,*,Auto,Auto">
@@ -59,11 +59,13 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBlock Text="{l:Localize UpdateDelayMs}" VerticalAlignment="Center" Margin="0,0,10,0" />
-            <NumericUpDown Minimum="500" Maximum="5000" Value="{Binding UpdateDelay}"
+        <Grid Grid.Row="3" ColumnDefinitions="Auto,Auto,Auto,*" Margin="0,0,0,10">
+            <TextBlock Grid.Column="0" Text="{l:Localize UpdateDelayMs}" VerticalAlignment="Center" Margin="0,0,10,0" />
+            <NumericUpDown Grid.Column="1" Minimum="500" Maximum="5000" Value="{Binding UpdateDelay}"
                            Increment="100" Width="150" />
-        </StackPanel>
+            <TextBlock Grid.Column="2" Text="{l:Localize Search}" VerticalAlignment="Center" Margin="20,0,10,0" />
+            <TextBox Grid.Column="3" Text="{Binding SearchText}" />
+        </Grid>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Left">
             <Button Content="{l:Localize StartAll}" Command="{Binding StartAllCommand}" Padding="20,10" />
