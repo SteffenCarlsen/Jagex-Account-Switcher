@@ -259,7 +259,7 @@ public class MassAccountHandlerViewModel : INotifyPropertyChanged
         {
             var startInfo = new ProcessStartInfo
             {
-                FileName = "javaw",
+                FileName = OperatingSystem.IsWindows() ? "javaw" : "java",
                 Arguments = $" {EnumHelper.GetLaunchParamterFromRamLimitation(model.Account.RamLimitation)} -jar{(model.Account.ClientArguments != null && model.Account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {model.Account.ClientArguments}",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
@@ -311,7 +311,7 @@ public class MassAccountHandlerViewModel : INotifyPropertyChanged
             {
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = "javaw",
+                    FileName = OperatingSystem.IsWindows() ? "javaw" : "java",
                     Arguments = $" {EnumHelper.GetLaunchParamterFromRamLimitation(account.RamLimitation)} -jar{(account.ClientArguments != null && account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {account.ClientArguments}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
