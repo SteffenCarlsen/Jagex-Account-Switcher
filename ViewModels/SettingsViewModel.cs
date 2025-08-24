@@ -287,12 +287,12 @@ public class SettingsViewModel : ViewModelBase, IDisposable
             }
         
             // Fallback: Use the version from csproj
-            return "1.7.1.2"; // Update this with each release
+            return "1.7.1.3"; // Update this with each release
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Error getting version: {ex.Message}");
-            return "1.7.1.2"; // Fallback version
+            return "1.7.1.3"; // Fallback version
         }
     }
     public async Task CheckForUpdates(bool showNoUpdateMessage = false)
