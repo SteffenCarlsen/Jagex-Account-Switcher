@@ -257,9 +257,10 @@ public class MassAccountHandlerViewModel : INotifyPropertyChanged
 
         if (RuneliteHelper.SetActiveAccount(model.Account, _viewModel.Accounts, _settings.ConfigurationsPath, _settings.RunelitePath))
         {
+            var needMacOsArgs = OperatingSystem.IsMacOS() ? "--add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED --add-opens=java.desktop/sun.awt=ALL-UNNAMED" : String.Empty;
             var startInfo = new ProcessStartInfo
             {
-                FileName = OperatingSystem.IsWindows() ? "javaw" : "java",
+                FileName = (OperatingSystem.IsWindows() ? "javaw" : "java") + " " + needMacOsArgs,
                 Arguments = $" {EnumHelper.GetLaunchParamterFromRamLimitation(model.Account.RamLimitation)} -jar{(model.Account.ClientArguments != null && model.Account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {model.Account.ClientArguments}",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
@@ -309,9 +310,10 @@ public class MassAccountHandlerViewModel : INotifyPropertyChanged
 
             if (RuneliteHelper.SetActiveAccount(account, _viewModel.Accounts, _settings.ConfigurationsPath, _settings.RunelitePath))
             {
+                var needMacOsArgs = OperatingSystem.IsMacOS() ? "--add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED --add-opens=java.desktop/sun.awt=ALL-UNNAMED" : String.Empty;
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = OperatingSystem.IsWindows() ? "javaw" : "java",
+                    FileName = (OperatingSystem.IsWindows() ? "javaw" : "java") + " " + needMacOsArgs,
                     Arguments = $" {EnumHelper.GetLaunchParamterFromRamLimitation(account.RamLimitation)} -jar{(account.ClientArguments != null && account.ClientArguments.Contains("--developer-mode") ? " -ea " : string.Empty)} \"{_settings.MicroBotJarPath}\"" + $" {account.ClientArguments}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,

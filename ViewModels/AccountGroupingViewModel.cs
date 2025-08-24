@@ -242,9 +242,10 @@ public class AccountGroupingViewModel : INotifyPropertyChanged
                         UserSettings.RunelitePath))
                 {
                     bool hasDeveloperMode = accountLinker.Account.ClientArguments != null && accountLinker.Account.ClientArguments.Contains("--developer-mode");
+                    var needMacOsArgs = OperatingSystem.IsMacOS() ? "--add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED --add-opens=java.desktop/sun.awt=ALL-UNNAMED" : String.Empty;
                     var startInfo = new ProcessStartInfo
                     {
-                        FileName = OperatingSystem.IsWindows() ? "javaw" : "java",
+                        FileName = (OperatingSystem.IsWindows() ? "javaw" : "java") + " " + needMacOsArgs,
                         Arguments = $"-jar{(hasDeveloperMode ? " -ea" : string.Empty)} \"{UserSettings.MicroBotJarPath}\"" + $" {accountLinker.Account.ClientArguments}",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,

@@ -287,12 +287,12 @@ public class SettingsViewModel : ViewModelBase, IDisposable
             }
         
             // Fallback: Use the version from csproj
-            return "1.7.1.1"; // Update this with each release
+            return "1.7.1.2"; // Update this with each release
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Error getting version: {ex.Message}");
-            return "1.7.1.1"; // Fallback version
+            return "1.7.1.2"; // Fallback version
         }
     }
     public async Task CheckForUpdates(bool showNoUpdateMessage = false)
@@ -348,7 +348,33 @@ public class SettingsViewModel : ViewModelBase, IDisposable
 
                 if (result == ButtonResult.Yes)
                 {
-                    await DownloadAndInstallUpdate(latestRelease);
+                    if (OperatingSystem.IsWindows())
+                    {
+                        await DownloadAndInstallUpdate(latestRelease);
+                    }
+                    else
+                    {
+                        var url = "https://github.com/SteffenCarlsen/Jagex-Account-Switcher/releases/";
+    
+                        if (OperatingSystem.IsMacOS())
+                        {
+                            Process.Start("open", url);
+                        }
+                        else if (OperatingSystem.IsLinux())
+                        {
+                            Process.Start("xdg-open", url);
+                        }
+                        else
+                        {
+                            // Fallback for other platforms
+                            var psi = new ProcessStartInfo
+                            {
+                                FileName = url,
+                                UseShellExecute = true
+                            };
+                            Process.Start(psi);
+                        }
+                    }
                 }
             }
             else if (showNoUpdateMessage)
