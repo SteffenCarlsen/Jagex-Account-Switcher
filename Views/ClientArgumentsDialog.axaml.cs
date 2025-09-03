@@ -1,7 +1,6 @@
 ﻿#region
 
 using System;
-using System.Linq;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
@@ -37,9 +36,9 @@ public partial class ClientArgumentsDialog : Window
     private TextBox _proxyPortTextBox;
     private ComboBox _proxyTypeComboBox;
     private TextBox _proxyUserTextBox;
+    private ComboBox _ramLimitationComboBox;
     private TextBox _rawArgumentsTextBox;
     private CheckBox _safeModeCheckBox;
-    private ComboBox _ramLimitationComboBox;
 
     public ClientArgumentsDialog()
     {
@@ -77,6 +76,7 @@ public partial class ClientArgumentsDialog : Window
             // Populate with values from the enum
             _ramLimitationComboBox.ItemsSource = EnumHelper.GetEnumValuesWithDescriptions<RamLimitationEnum>();
         }
+
         _debugCheckBox = this.FindControl<CheckBox>("DebugCheckBox");
         _microbotDebugCheckBox = this.FindControl<CheckBox>("MicrobotDebugCheckBox");
         _safeModeCheckBox = this.FindControl<CheckBox>("SafeModeCheckBox");
@@ -119,7 +119,7 @@ public partial class ClientArgumentsDialog : Window
             _proxyCredentialsGrid.IsVisible = showProxyFields;
             UpdateRawArguments();
         };
-        
+
         _ramLimitationComboBox.SelectionChanged += (s, e) => UpdateRawArguments();
         _javConfigTextBox.TextChanged += (s, e) => UpdateRawArguments();
         _profileTextBox.TextChanged += (s, e) => UpdateRawArguments();
@@ -160,32 +160,30 @@ public partial class ClientArgumentsDialog : Window
         if (_proxyTypeComboBox.SelectedIndex > 0) // 0 is "None"
         {
             var proxyType = ((ComboBoxItem)_proxyTypeComboBox.SelectedItem!)?.Content?.ToString();
+            var proxyBuilder = new StringBuilder(proxyType + "://");
+            if (!string.IsNullOrWhiteSpace(_proxyUserTextBox.Text))
+            {
+                proxyBuilder.Append(_proxyUserTextBox.Text);
+            }
+
+            if (!string.IsNullOrWhiteSpace(_proxyPasswordTextBox.Text))
+            {
+                proxyBuilder.Append(":" + _proxyPasswordTextBox.Text);
+            }
 
             if (!string.IsNullOrWhiteSpace(_proxyHostTextBox.Text))
             {
-                // Build the proxy string in format ip:port:user:pass
-                var proxyBuilder = new StringBuilder(_proxyHostTextBox.Text);
-
-                if (!string.IsNullOrWhiteSpace(_proxyPortTextBox.Text))
-                    proxyBuilder.Append(":" + _proxyPortTextBox.Text);
-                else
-                    proxyBuilder.Append(":");
-
-                if (!string.IsNullOrWhiteSpace(_proxyUserTextBox.Text))
-                {
-                    proxyBuilder.Append(":" + _proxyUserTextBox.Text);
-
-                    if (!string.IsNullOrWhiteSpace(_proxyPasswordTextBox.Text))
-                        proxyBuilder.Append(":" + _proxyPasswordTextBox.Text);
-                    else
-                        proxyBuilder.Append(":");
-                }
-
-                sb.Append($"-proxy={proxyBuilder} ");
+                proxyBuilder.Append("@" + _proxyHostTextBox.Text);
             }
 
-            sb.Append($"-proxy-type={proxyType} ");
+            if (!string.IsNullOrWhiteSpace(_proxyPortTextBox.Text))
+            {
+                proxyBuilder.Append(":" + _proxyPortTextBox.Text);
+            }
+
+            sb.Append($"-proxy={proxyBuilder} ");
         }
+
         _rawArgumentsTextBox.Text = sb.ToString().Trim();
     }
 
@@ -245,20 +243,52 @@ public partial class ClientArgumentsDialog : Window
             if (endIndex < 0) endIndex = arguments.Length;
 
             var proxyValue = arguments.Substring(proxyArgIndex + 7, endIndex - proxyArgIndex - 7);
-            var parts = proxyValue.Split(':');
 
-            if (parts.Length >= 1) _proxyHostTextBox.Text = parts[0];
-            if (parts.Length >= 2) _proxyPortTextBox.Text = parts[1];
-            if (parts.Length >= 3) _proxyUserTextBox.Text = parts[2];
-            if (parts.Length >= 4) _proxyPasswordTextBox.Text = parts[3];
+            // Parse proxy type
+            var protocolEndIndex = proxyValue.IndexOf("://");
+            if (protocolEndIndex > 0)
+            {
+                var proxyType = proxyValue.Substring(0, protocolEndIndex);
+                _proxyTypeComboBox.SelectedIndex = proxyType.Equals("SOCKS", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
 
-            // Set proxy type
-            if (arguments.Contains("-proxy-type=HTTP"))
-                _proxyTypeComboBox.SelectedIndex = 1;
-            else if (arguments.Contains("-proxy-type=SOCKS"))
-                _proxyTypeComboBox.SelectedIndex = 2;
+                // Remove protocol part for further parsing
+                proxyValue = proxyValue.Substring(protocolEndIndex + 3);
+
+                // Check for credentials (username:password@)
+                var credentialsSeparator = proxyValue.IndexOf('@');
+                if (credentialsSeparator > 0)
+                {
+                    var credentials = proxyValue.Substring(0, credentialsSeparator);
+                    var passwordSeparator = credentials.IndexOf(':');
+
+                    if (passwordSeparator > 0)
+                    {
+                        _proxyUserTextBox.Text = credentials.Substring(0, passwordSeparator);
+                        _proxyPasswordTextBox.Text = credentials.Substring(passwordSeparator + 1);
+                    }
+                    else
+                    {
+                        _proxyUserTextBox.Text = credentials;
+                    }
+
+                    // Remove credentials part for further parsing
+                    proxyValue = proxyValue.Substring(credentialsSeparator + 1);
+                }
+
+                // Parse hostname:port
+                var portSeparator = proxyValue.IndexOf(':');
+                if (portSeparator > 0)
+                {
+                    _proxyHostTextBox.Text = proxyValue.Substring(0, portSeparator);
+                    _proxyPortTextBox.Text = proxyValue.Substring(portSeparator + 1);
+                }
+                else
+                {
+                    _proxyHostTextBox.Text = proxyValue;
+                }
+            }
         }
-        
+
         if (_ramLimitationComboBox is { ItemsSource: not null })
         {
             _ramLimitationComboBox.SelectedIndex = EnumHelper.GetEnumIndex(selectedAccountRamLimitation);
@@ -268,8 +298,8 @@ public partial class ClientArgumentsDialog : Window
     private void OnOkButtonClick(object sender, RoutedEventArgs e)
     {
         ClientArguments = _rawArgumentsTextBox.Text;
-        SelectedRamLimitation = (_ramLimitationComboBox.SelectedItem is EnumHelper.EnumDescriptionItem<RamLimitationEnum> selectedItem) 
-            ? selectedItem.Value 
+        SelectedRamLimitation = _ramLimitationComboBox.SelectedItem is EnumHelper.EnumDescriptionItem<RamLimitationEnum> selectedItem
+            ? selectedItem.Value
             : RamLimitationEnum.Default;
         Close((ClientArguments, SelectedRamLimitation));
     }
