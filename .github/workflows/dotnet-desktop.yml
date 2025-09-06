@@ -138,8 +138,51 @@ jobs:
           name: MacOSApp
           path: out/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
 
+  build-linux:
+    needs: [build-windows]
+    runs-on: ubuntu-latest
+    env:
+      Solution_Name: JagexAccountSwitcher.csproj
+      Configuration: Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download version
+        uses: actions/download-artifact@v4
+        with:
+          name: version-info
+
+      - name: Set version variable
+        run: |
+          VERSION=$(cat version.txt | tr -d '\r\n')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Publish for Linux
+        run: dotnet publish $Solution_Name -c $Configuration -r linux-x64 --self-contained true -o out/JagexAccountSwitcher-linux
+
+      - name: Set executable permissions
+        run: chmod +x out/JagexAccountSwitcher-linux/JagexAccountSwitcher
+
+      - name: Create Linux ZIP file
+        run: zip -r out/JagexAccountSwitcher_linux_v${{ env.VERSION }}.zip out/JagexAccountSwitcher-linux
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LinuxApp
+          path: out/JagexAccountSwitcher_linux_v${{ env.VERSION }}.zip
+
   create-release:
-    needs: [ build-windows, build-macos ]
+    needs: [ build-windows, build-macos, build-linux ]
     runs-on: ubuntu-latest
 
     steps:
@@ -213,4 +256,14 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./MacOSApp/JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
           asset_name: JagexAccountSwitcher_macos_v${{ env.VERSION }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload Linux Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./LinuxApp/JagexAccountSwitcher_linux_v${{ env.VERSION }}.zip
+          asset_name: JagexAccountSwitcher_linux_v${{ env.VERSION }}.zip
           asset_content_type: application/zip
